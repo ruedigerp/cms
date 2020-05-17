@@ -1,0 +1,19 @@
+{
+    "blocks": [
+        {
+            "data": {
+                "level": 2, 
+                "text": "Test im Docker"
+            }, 
+            "type": "header"
+        }, 
+        {
+            "data": {
+                "text": "Test ob es jetzt im richtigem Volume landet."
+            }, 
+            "type": "paragraph"
+        }
+    ], 
+    "time": 1589734338573, 
+    "version": "2.18.0"
+}

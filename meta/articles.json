@@ -1,0 +1,54 @@
+{
+    "articles": [
+        {
+            "data": {
+                "author": "R\u00fcdiger K\u00fcpper",
+                "title": "Test Foo Bar"
+            },
+            "id": "2020-05-16-23-00-09-569079",
+            "type": "published"
+        },
+        {
+            "data": {
+                "author": "R\u00fcdiger K\u00fcpper",
+                "title": "Test Artikel hinzuf\u00fcgen"
+            },
+            "id": "2020-05-17-10-17-15-828790",
+            "type": "published"
+        },
+        {
+            "data": {
+                "author": "R\u00fcdiger K\u00fcpper",
+                "title": "Dies ist ein Title"
+            },
+            "id": "2020-05-17-00-26-10-400793",
+            "type": "published"
+        },
+        {
+            "data": {
+                "author": "R\u00fcdiger K\u00fcpper",
+                "title": "Ein wenig mit dem Editor spielen"
+            },
+            "id": "2020-05-17-00-26-57-225772",
+            "type": "published"
+        },
+        {
+            "data": {
+                "author": "R\u00fcdiger K\u00fcpper",
+                "title": "Test 4"
+            },
+            "id": "2020-05-17-02-23-47-145622",
+            "type": "published"
+        },
+        {
+            "data": {
+                "author": "Rüdiger Küpper", 
+                "title": "Neuer Article"
+            },
+            "id": "2020-05-17-16-51-44-855019",
+            "type": "draft"
+        }
+    ],
+    "time": 1589675058843,
+    "version": "2.18.0"
+}

@@ -31,10 +31,10 @@
     <div class="ce-example__content _ce-example__content--small">
       <h4>Artikelliste:</h4>
       {% set bgcol = "#000000;" %}
-      <div style="float:left; width:100px; color: white; background-color: {{ bgcol }}; border: #d00 dotted 0px;"><b>Type</b></div>
       <div style="float:left; width:300px; color: white; background-color: {{ bgcol }}; border: #d00 dotted 0px;"><b>Titel</b></div>
       <div style="float:left; width:200px; color: white; background-color: {{ bgcol }}; border: #d00 dotted 0px;"><b>Autor</b></div>
-      <div style="float:left; width:100px; color: white; background-color: {{ bgcol }}; border: #d00 dotted 0px;"><b>Editor</b></div>
+      <div style="float:left; width:100px; color: white; background-color: {{ bgcol }}; border: #d00 dotted 0px;"><b>Type</b></div>
+      <div style="float:left; width:200px; color: white; background-color: {{ bgcol }}; border: #d00 dotted 0px;"><b>Editor</b></div>
       <div style="clear:both;"></div>
       <!-- For loop logic of jinja template -->
       {% for dict_items in dict_item %}
@@ -43,17 +43,19 @@
         {% else %}
           {% set bgcol = "#cccccc;" %}
         {% endif %}
-        {% for key, value in dict_items.items() %}
+        {% set items = dict(dict_item[dict_items]) %}
+        {% for key, value in items.items() %}
           {% if key  == "data" %}
             <div style="float:left; width:300px; background-color: {{ bgcol }}; border: #d00 dotted 0px;">{{value['title'][0]|upper}}{{value['title'][1:]}}</div>
             <div style="float:left; width:200px; background-color: {{ bgcol }}; border: #d00 dotted 0px;">{{value['author'][0]|upper}}{{value['author'][1:]}}</div>
             {% elif key == 'type' -%}
               <div style="float:left; width:100px; background-color: {{ bgcol }}; border: #d00 dotted 0px;">{{value[0]|upper}}{{value[1:]}}</div>
             {% elif key == 'id' -%}
-            <div style="float:left; width:100px; background-color: {{ bgcol }}; border: #d00 dotted 0px;">
+            <div style="float:left; width:200px; background-color: {{ bgcol }}; border: #d00 dotted 0px;">
               <!-- {{key[0]|upper}}{{key[1:]}}: {{value}} -->
               <a href="/editor/{{value}}">Edit</a> |
               <a href="/view/{{value}}" target="_blank">Preview</a>
+              <a href="/editor/meta/edit/{{value}}" target="_self">Edit Meta</a>
             </div>
           {% else %}
             <div style="float:left; width:400px; background-color: {{ bgcol }}; border: #d00 dotted 0px;">{{value}}</div>

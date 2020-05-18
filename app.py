@@ -31,26 +31,32 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 @app.route('/editor/list', methods = ["GET"])
 def index():
     import os, fnmatch
-    metadata = {}
-    metafiles = []
     master_dictionary = {}
     listOfMetaFiles = os.listdir('meta/')
     listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
+    listOfMetaFiles = sorted(listOfMetaFiles)
     pattern = "*.json"
     for metaentry in listOfMetaFiles:
         if fnmatch.fnmatch(metaentry, pattern):
             filename = metaentry.replace(".json", "")
+            print ("Filename:", filename)
             master_dictionary[filename] = read_meta_edit(filename)
-    files = []
-    listOfFiles = os.listdir('data/')
-    listOfFiles = natsort.natsorted(listOfFiles,reverse=True)
-    pattern = "*.json"
-    for entry in listOfFiles:
-        if fnmatch.fnmatch(entry, pattern):
-            # print ("Entry: " + entry)
-            x = entry.replace(".json", "")
-            files.append(x)
-    return render_template("index.html", len = len(files), listOfFiles = files, dict_item = master_dictionary)
+    app.logger.info("Debug: ", master_dictionary)
+    # files = []
+    # listOfFiles = os.listdir('data/')
+    # listOfFiles = natsort.natsorted(listOfFiles,reverse=True)
+    # pattern = "*.json"
+    # for entry in listOfFiles:
+    #     if fnmatch.fnmatch(entry, pattern):
+    #         # print ("Entry: " + entry)
+    #         x = entry.replace(".json", "")
+    #         files.append(x)
+    # return render_template("index.html", len = len(files), listOfFiles = files, dict_item = master_dictionary)
+    return render_template("index.html", dict_item = master_dictionary)
+
+def p_debug(str):
+    app.logger.info("Debug: ", str)
+    return
 
 @app.route('/editor/meta/save', methods=['POST'])
 def savemetadata():

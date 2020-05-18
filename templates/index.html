@@ -21,14 +21,6 @@
       </div>
     </div>
     <div class="ce-example__content _ce-example__content--small">
-      <ol>
-      <!-- {%for i in range(0, len)%}
-          <li><a href="/editor/{{listOfFiles[i]}}">{{listOfFiles[i]}}</a> /
-            <a target="_blank" href="/view/{{listOfFiles[i]}}">Preview</a></li>
-      {%endfor%} -->
-      </ol>
-    </div>
-    <div class="ce-example__content _ce-example__content--small">
       <h4>Artikelliste:</h4>
       {% set bgcol = "#000000;" %}
       <div style="float:left; width:300px; color: white; background-color: {{ bgcol }}; border: #d00 dotted 0px;"><b>Titel</b></div>
@@ -37,7 +29,8 @@
       <div style="float:left; width:200px; color: white; background-color: {{ bgcol }}; border: #d00 dotted 0px;"><b>Editor</b></div>
       <div style="clear:both;"></div>
       <!-- For loop logic of jinja template -->
-      {% for dict_items in dict_item %}
+      <!--  { % set sort_on = request.args.sort_on|default('id') %} -->
+      {% for dict_items in dict_item|sort(reverse=True) %}
         {% if loop.index is divisibleby 2 %}
           {% set bgcol = "#eeeeee;" %}
         {% else %}

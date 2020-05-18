@@ -21,7 +21,6 @@ from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
 ## from urllib.parse import urljoin
 # from flask_socketio import SocketIO, emit
-
 # from urllib import urlopen
 
 app = Flask(__name__)
@@ -42,16 +41,6 @@ def index():
             print ("Filename:", filename)
             master_dictionary[filename] = read_meta_edit(filename)
     app.logger.info("Debug: ", master_dictionary)
-    # files = []
-    # listOfFiles = os.listdir('data/')
-    # listOfFiles = natsort.natsorted(listOfFiles,reverse=True)
-    # pattern = "*.json"
-    # for entry in listOfFiles:
-    #     if fnmatch.fnmatch(entry, pattern):
-    #         # print ("Entry: " + entry)
-    #         x = entry.replace(".json", "")
-    #         files.append(x)
-    # return render_template("index.html", len = len(files), listOfFiles = files, dict_item = master_dictionary)
     return render_template("index.html", dict_item = master_dictionary)
 
 def p_debug(str):
@@ -64,10 +53,7 @@ def savemetadata():
     id     = request.form.get('id')
     author = request.form.get('author')
     title = request.form.get('title')
-    # print ("data: ", data)
     meta_data = {"id": id, "type": type, "data": { "title": title, "author": author } }
-    # meta_data.articles.blocks['id'] = id
-    print ("Meta_data: ", meta_data)
     write_meta(id,meta_data);
     return redirect("/editor/list")
 
@@ -92,7 +78,6 @@ def editor(str):
 
 @app.route("/view/<id>", methods=["GET"])
 def view(id):
-    # data = open('data/'+id+'.json','r').read()
     read_data(id)
     return render_template("view.html", id=id )
 
@@ -101,7 +86,6 @@ def view(id):
 def newarticle():
     dateTimeObj = datetime.now()
     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
-    print ("ID: " + id)
     write_data(id,"")
     write_new_meta(id)
     return redirect("/editor/"+id);
@@ -116,30 +100,21 @@ def to_pretty_json(value):
                       indent=4, separators=(',', ': '))
 
 def write_new_meta(id):
-    # meta_data = read_meta()
-    print ("id: ", id)
     meta_data = {}
-    print ("Meta: ", meta_data)
     meta_data = {"id": id, "type": "draft", "data": { "title": "Neuer Article", "author": "Authorname" } }
-    # meta_data.articles.blocks['id'] = id
-    print ("Meta_data: ", meta_data)
     write_meta(id,meta_data);
 
 def read_meta_edit(id):
     return json.loads(open('meta/' + id + '.json','r').read())
 
 def read_meta():
-    # data = json.loads(open('data/data.json','r').read())
     return json.loads(open('meta/articles.json','r').read())
-    # return json.loads(open('meta/' + id + '.json','r').read())
 
 def write_meta(id,data):
-    # print ("id: " + id)
     with open("meta/" + id + ".json", "w") as twitter_data_file:
         json.dump(data, twitter_data_file, indent=4, sort_keys=True)
 
 def read_data(id):
-    # data = json.loads(open('data/data.json','r').read())
     return json.loads(open('data/' + id + '.json','r').read())
 
 def write_data(id,data):
@@ -148,11 +123,6 @@ def write_data(id,data):
         json.dump(data, twitter_data_file, indent=4, sort_keys=True)
 
 def save_articles(articles, filepath):
-    """
-        saves articles to a json file
-        :param article a list of dict
-        :param path of file to save
-    """
     with open(filepath, "w") as f:
         json.dump(articles, f, indent=4)
     return None

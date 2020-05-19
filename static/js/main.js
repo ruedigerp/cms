@@ -136,7 +136,6 @@ function createEditor(data){
           data: data,
           success: function (response) {
               $("#saved").delay(20).fadeIn(500);
-              // $("#saved").css("visibility", "visible");
               $("#saved").delay(2000).fadeOut(500);
           },
           error: function (xhr) {

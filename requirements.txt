@@ -16,7 +16,7 @@ Flask-RESTful==0.3.7
 Flask-SQLAlchemy==2.3.2
 Flask-WTF==0.14.2
 funcsigs==1.0.2
-futures==3.2.0
+# futures==3.2.0
 httplib2==0.15.0
 idna==2.6
 itsdangerous==0.24
@@ -30,8 +30,8 @@ natsort==6.2.1
 pluggy==0.6.0
 py==1.5.3
 pyasn1==0.4.2
-pygame==1.9.3
-PyJWT==1.6.1
+# pygame==1.9.3
+# PyJWT==1.6.1
 pytest==3.5.1
 pytest-cov==2.5.1
 pytest-cover==3.0.0
@@ -39,7 +39,7 @@ pytest-coverage==0.0
 python-coveralls==2.9.1
 python-dateutil==2.7.2
 pytz==2019.3
-PyYAML==3.12
+# PyYAML==3.12
 redis==3.1.0
 requests==2.21.0
 rsa==3.4.2

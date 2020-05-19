@@ -42,7 +42,7 @@
             success: function (response) {
               var jdata = $.parseJSON(response);
               var div = document.createElement("div");
-              console.log('Load 1234 : ' + JSON.stringify(jdata) );
+              console.log('Load 12345 : ' + JSON.stringify(jdata) );
               var data = f_editorjs_convert_json_to_html(jdata);
               var mainContainer = document.getElementById("myData");
               div.innerHTML = data;

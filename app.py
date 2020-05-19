@@ -68,7 +68,7 @@ def postJsonHandler(str):
 @app.route('/getjson/<id>', methods = ['GET'])
 def getJsonHandler(id):
     content = read_data(id)
-    print (content)
+    # print (content)
     return json.dumps(content)
 
 @app.route("/editor/<str>", methods=["GET"])

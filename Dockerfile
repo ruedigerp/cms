@@ -1,10 +1,8 @@
 # FROM nginx:alpine
 # COPY . /usr/share/nginx/html/
 
-# FROM python:2.7
-FROM cms-core:1.0
+FROM cms-core:1.1
 COPY . /app
 WORKDIR /app
-# RUN pip install -r requirements.txt
-ENTRYPOINT ["python"]
+ENTRYPOINT ["python3"]
 CMD ["app.py"]

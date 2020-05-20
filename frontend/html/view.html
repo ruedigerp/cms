@@ -17,21 +17,43 @@
       alert("append" + data)
       var mainContainer = document.getElementById("myData");
       for (var i = 0; i < data.length; i++) {
-          console.log("i: "+ i);
-          var div = document.createElement("div");
-          if ( data[i].type == "header") {
-            div.innerHTML = '<h'+ data[i].data.level + '>' + data[i].data.text + '</h' + data[i].data.level + '>';
-          }
-          else if ( data[i].type == "paragraph") {
-            div.innerHTML = '<p>' + data[i].data.text + '</p>';
-          }
-          else if ( data[i].type == "code") {
-            div.innerHTML = '<pre><code>' + data[i].data.code + '</code></pre>';
-          }
-          // div.innerHTML = 'Name: ' + data[i].type + ' ' + data[i].data.text;
-          mainContainer.appendChild(div);
+        console.log("i: "+ i);
+        var div = document.createElement("div");
+        if ( data[i].type == "header") {
+          div.innerHTML = '<h'+ data[i].data.level + '>' + data[i].data.text + '</h' + data[i].data.level + '>';
+        }
+        else if ( data[i].type == "paragraph") {
+          div.innerHTML = '<p>' + data[i].data.text + '</p>';
+        }
+        else if ( data[i].type == "code") {
+          div.innerHTML = '<pre><code>' + data[i].data.code + '</code></pre>';
+        }
+        // div.innerHTML = 'Name: ' + data[i].type + ' ' + data[i].data.text;
+        mainContainer.appendChild(div);
       }
     }
+    function loadData() {
+      console.log("load data view.html FE");
+      let parts = window.location.pathname.split( '/' );
+      let url = '/api/v1/article/get/' + parts[1];
+      $.ajax({
+          url: url,
+          type: 'GET',
+          success: function (response) {
+            var jdata = $.parseJSON(response);
+            var div = document.createElement("div");
+            console.log('Load 12345 : ' + JSON.stringify(jdata) );
+            var data = f_editorjs_convert_json_to_html(jdata);
+            var mainContainer = document.getElementById("myData");
+            div.innerHTML = data;
+            mainContainer.appendChild(div);
+          },
+          error: function (xhr) {
+              alert('Error: There was some error while posting. Please try again later.');
+          }
+      });
+    }
+    // );
     // function findGetParameter(parameterName) {
     //     var result = null,
     //         tmp = [];
@@ -45,28 +67,6 @@
     //     return result;
     // }
     // url: 'http://localhost:4006/getjson/' + findGetParameter("id") ,
-      function loadData() {
-        console.log("load data view.html FE");
-        let parts = window.location.pathname.split( '/' );
-        let url = '/api/v1/article/get/' + parts[1];
-        $.ajax({
-            url: url,
-            type: 'GET',
-            success: function (response) {
-              var jdata = $.parseJSON(response);
-              var div = document.createElement("div");
-              console.log('Load 12345 : ' + JSON.stringify(jdata) );
-              var data = f_editorjs_convert_json_to_html(jdata);
-              var mainContainer = document.getElementById("myData");
-              div.innerHTML = data;
-              mainContainer.appendChild(div);
-            },
-            error: function (xhr) {
-                alert('Error: There was some error while posting. Please try again later.');
-            }
-        });
-      }
-    // );
   </script>
 </body>
 </html>

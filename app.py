@@ -31,7 +31,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 def apistatus():
     return jsonify({"status":"ok"})
 
-@app.route('/editor/list', methods = ["GET"])
+# @app.route('/editor/list', methods = ["GET"])
 @app.route('/api/v1/article/list', methods = ["GET"])
 def index():
     import os, fnmatch
@@ -46,7 +46,8 @@ def index():
             print ("Filename:", filename)
             master_dictionary[filename] = read_meta_edit(filename)
     app.logger.info("Debug: ", master_dictionary)
-    return render_template("index.html", dict_item = master_dictionary)
+    return json.dumps(master_dictionary)
+    # return render_template("index.html", dict_item = master_dictionary)
 
 @app.route('/editor/meta/save', methods=['POST'])
 def savemetadata():
@@ -69,7 +70,6 @@ def postJsonHandler(str):
 @app.route('/api/v1/article/get/<id>', methods = ['GET'])
 def getJsonHandler(id):
     content = read_data(id)
-    # print (content)
     return json.dumps(content)
 
 @app.route("/api/v1/article/new", methods=["GET"])

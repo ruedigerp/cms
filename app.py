@@ -27,7 +27,12 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "OCML3BRawWEUeaxcuKHLpw"
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
+@app.route('/api/v1/status', methods=["GET"])
+def apistatus():
+    return jsonify({"status":"ok"})
+
 @app.route('/editor/list', methods = ["GET"])
+@app.route('/api/v1/article/list', methods = ["GET"])
 def index():
     import os, fnmatch
     master_dictionary = {}
@@ -43,10 +48,6 @@ def index():
     app.logger.info("Debug: ", master_dictionary)
     return render_template("index.html", dict_item = master_dictionary)
 
-def p_debug(str):
-    app.logger.info("Debug: ", str)
-    return
-
 @app.route('/editor/meta/save', methods=['POST'])
 def savemetadata():
     type   = request.form.get('type')
@@ -57,7 +58,7 @@ def savemetadata():
     write_meta(id,meta_data);
     return redirect("/editor/list")
 
-@app.route('/postjson/<str>', methods = ['POST'])
+@app.route('/api/v1/article/post/<str>', methods = ['POST'])
 def postJsonHandler(str):
     print (request.is_json)
     content = request.get_json()
@@ -65,35 +66,38 @@ def postJsonHandler(str):
     write_data(str,content)
     return 'JSON posted'
 
-@app.route('/getjson/<id>', methods = ['GET'])
+@app.route('/api/v1/article/get/<id>', methods = ['GET'])
 def getJsonHandler(id):
     content = read_data(id)
     # print (content)
     return json.dumps(content)
 
-@app.route("/editor/<str>", methods=["GET"])
-def editor(str):
-    data = open('data/'+str+'.json','r').read()
-    return render_template("editor.html", data=data, id=str )
-
-@app.route("/view/<id>", methods=["GET"])
-def view(id):
-    read_data(id)
-    return render_template("view.html", id=id )
-
-
-@app.route("/editor/new", methods=["GET"])
+@app.route("/api/v1/article/new", methods=["GET"])
 def newarticle():
     dateTimeObj = datetime.now()
     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
     write_data(id,"")
     write_new_meta(id)
-    return redirect("/editor/"+id);
+    return redirect("/admin/editor/"+id);
 
 @app.route("/editor/meta/edit/<id>", methods=["GET"])
 def meta_edit(id):
     dict_item = read_meta_edit(id)
     return render_template("meta.html", dict_item=dict_item )
+
+# @app.route("/editor/<str>", methods=["GET"])
+# def editor(str):
+#     data = open('data/'+str+'.json','r').read()
+#     return render_template("editor.html", data=data, id=str )
+
+# @app.route("/view/<id>", methods=["GET"])
+# def view(id):
+#     read_data(id)
+#     return render_template("view.html", id=id )
+
+def p_debug(str):
+    app.logger.info("Debug: ", str)
+    return
 
 def to_pretty_json(value):
     return json.dumps(value, sort_keys=false,
@@ -107,8 +111,8 @@ def write_new_meta(id):
 def read_meta_edit(id):
     return json.loads(open('meta/' + id + '.json','r').read())
 
-def read_meta():
-    return json.loads(open('meta/articles.json','r').read())
+# def read_meta():
+#     return json.loads(open('meta/articles.json','r').read())
 
 def write_meta(id,data):
     with open("meta/" + id + ".json", "w") as twitter_data_file:

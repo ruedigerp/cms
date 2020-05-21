@@ -24,11 +24,9 @@ const saveButton = document.getElementById('saveButton');
 
 $("#saved").delay(1).fadeOut(1);
 
-// let url = 'http://localhost:4006/getjson/' + findGetParameter("id") ;
 let path = location.pathname.substring(1);
 let parts = window.location.pathname.split( '/' );
 console.log("Part1: " + parts[3] );
-// let url = '/api/v1/article/get/' + location.pathname.substring(1);
 let url = '/api/v1/article/get/' + parts[3];
 async function fetchData() {
   return fetch(url)
@@ -37,6 +35,20 @@ async function fetchData() {
 }
 
 fetchData()
+
+function setTitle(data) {
+  document.title = data['data']['title'];
+  console.log("setTitle: " + data['data']['title']);
+  $("#documentName").text(data['data']['title']);
+}
+async function fetchMeta() {
+  let parts = window.location.pathname.split( '/' );
+  let url = '/api/v1/metadata/get/' + parts[3];
+  return fetch(url)
+    .then(data => {return data.json() })
+    .then(res => { setTitle(res) })
+}
+fetchMeta()
 
 function createEditor(data){
   var editor = new EditorJS({

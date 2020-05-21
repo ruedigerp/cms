@@ -17,6 +17,7 @@
       </button>
       <div id="saved" style="color: #f00; visibilty: hidden ">Gespeichert</div>
       <div class="ce-example__header-menu">
+        Dokumentenname: <span id="documentName"></span>
         <a href="/admin/index.html" >Artikelliste</a>
         <script>
         document.write('<a href="/api/v1/article/new/' + location.host + '">Neuer Article</a>');
@@ -24,13 +25,9 @@
       </div>
     </div>
     <div class="ce-example__content _ce-example__content--small">
-
       <div id="editorjs"></div>
-
     </div>
-
   </div>
-
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/header@latest"></script><!-- Header -->
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/simple-image@latest"></script><!-- Image -->
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/delimiter@latest"></script><!-- Delimiter -->
@@ -42,12 +39,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/table@latest"></script><!-- Table -->
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/link@latest"></script><!-- Link -->
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/warning@latest"></script><!-- Warning -->
-
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/marker@latest"></script><!-- Marker -->
   <script src="https://cdn.jsdelivr.net/npm/@editorjs/inline-code@latest"></script><!-- Inline Code -->
-
   <script src="/static/dist/editor.js"></script>
   <script src="/static/js/main.js"></script>
-
 </body>
 </html>

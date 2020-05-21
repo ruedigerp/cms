@@ -10,7 +10,6 @@ services:
       - cmsnetwork
 
   cms-fe:
-    # image: cmsdockerreg.azurecr.io/inc-web
     image: cms-fe
     build: frontend
     ports:
@@ -19,7 +18,6 @@ services:
       - cmsnetwork
 
   cms-admin:
-    # image: cmsdockerreg.azurecr.io/inc-web
     image: cms-admin
     build: admin
     ports:
@@ -29,6 +27,7 @@ services:
 
   cms-api:
     image: cms:1.0
+    build: .
     ports:
       - "4006:4006"
     volumes:

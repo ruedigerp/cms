@@ -47,17 +47,6 @@ def index():
             master_dictionary[filename] = read_meta_edit(filename)
     app.logger.info("Debug: ", master_dictionary)
     return json.dumps(master_dictionary)
-    # return render_template("index.html", dict_item = master_dictionary)
-
-@app.route('/editor/meta/save', methods=['POST'])
-def savemetadata():
-    type   = request.form.get('type')
-    id     = request.form.get('id')
-    author = request.form.get('author')
-    title = request.form.get('title')
-    meta_data = {"id": id, "type": type, "data": { "title": title, "author": author } }
-    write_meta(id,meta_data);
-    return redirect("/editor/list")
 
 @app.route('/api/v1/article/post/<str>', methods = ['POST'])
 def postJsonHandler(str):
@@ -72,28 +61,30 @@ def getJsonHandler(id):
     content = read_data(id)
     return json.dumps(content)
 
-@app.route("/api/v1/article/new", methods=["GET"])
-def newarticle():
+@app.route("/api/v1/article/new/<callback>:<port>", methods=["GET"])
+def newarticle(callback,port):
+    referrer = request.headers.get("Referer")
     dateTimeObj = datetime.now()
     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
     write_data(id,"")
     write_new_meta(id)
-    return redirect("/admin/editor/"+id);
+    return redirect("http://"+callback+":"+port+"/admin/editor.html/"+id);
 
-@app.route("/editor/meta/edit/<id>", methods=["GET"])
+@app.route("/api/v1/metadata/get/<id>", methods=["GET"])
 def meta_edit(id):
-    dict_item = read_meta_edit(id)
-    return render_template("meta.html", dict_item=dict_item )
+    content = read_meta_edit(id)
+    return json.dumps(content)
 
-# @app.route("/editor/<str>", methods=["GET"])
-# def editor(str):
-#     data = open('data/'+str+'.json','r').read()
-#     return render_template("editor.html", data=data, id=str )
-
-# @app.route("/view/<id>", methods=["GET"])
-# def view(id):
-#     read_data(id)
-#     return render_template("view.html", id=id )
+@app.route('/api/v1/metadata/save', methods=['POST'])
+def savemetadata():
+    type     = request.form.get('type')
+    id       = request.form.get('id')
+    author   = request.form.get('author')
+    title    = request.form.get('title')
+    callback = request.form.get('callback')
+    meta_data = {"id": id, "type": type, "data": { "title": title, "author": author } }
+    write_meta(id,meta_data);
+    return redirect("http://"+callback+"/admin/index.html")
 
 def p_debug(str):
     app.logger.info("Debug: ", str)
@@ -105,14 +96,11 @@ def to_pretty_json(value):
 
 def write_new_meta(id):
     meta_data = {}
-    meta_data = {"id": id, "type": "draft", "data": { "title": "Neuer Article", "author": "Authorname" } }
+    meta_data = {"id": id, "type": "draft", "data": { "title": id, "author": "Authorname" } }
     write_meta(id,meta_data);
 
 def read_meta_edit(id):
     return json.loads(open('meta/' + id + '.json','r').read())
-
-# def read_meta():
-#     return json.loads(open('meta/articles.json','r').read())
 
 def write_meta(id,data):
     with open("meta/" + id + ".json", "w") as twitter_data_file:

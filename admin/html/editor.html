@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Editor.js 🤩🧦🤨 example</title>
+  <title>Admin Editor - CMS 🤩🧦🤨 </title>
   <link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
   <link href="/static/assets/demo.css" rel="stylesheet">
   <script src="/static/assets/json-preview.js"></script>
@@ -17,8 +17,10 @@
       </button>
       <div id="saved" style="color: #f00; visibilty: hidden ">Gespeichert</div>
       <div class="ce-example__header-menu">
-        <a href="/editor/list" >Artikelliste</a>
-        <a href="/editor/new" >Neuer Article</a>
+        <a href="/admin/index.html" >Artikelliste</a>
+        <script>
+        document.write('<a href="/api/v1/article/new/' + location.host + '">Neuer Article</a>');
+        </script>
       </div>
     </div>
     <div class="ce-example__content _ce-example__content--small">

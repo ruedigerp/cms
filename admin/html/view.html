@@ -8,7 +8,7 @@
     <script src="/static/assets/json-preview.js"></script>
     <script src="/static/assets/editor_output.js"></script>
     <link href="/static/assets/main.css" rel="stylesheet">
-    <title>Page - CMS 🤩🧦🤨 example</title>
+    <title>Admin Preview - CMS 🤩🧦🤨 example</title>
 </head>
 <body onload="loadData();">
   <div id="myData"></div>
@@ -28,20 +28,20 @@
         else if ( data[i].type == "code") {
           div.innerHTML = '<pre><code>' + data[i].data.code + '</code></pre>';
         }
-        // div.innerHTML = 'Name: ' + data[i].type + ' ' + data[i].data.text;
         mainContainer.appendChild(div);
       }
     }
     function loadData() {
-      console.log("load data view.html FE");
+      console.log("load data view.html Admin");
       let parts = window.location.pathname.split( '/' );
-      let url = '/api/v1/article/get/' + parts[1];
+      let url = '/api/v1/article/get/' + parts[3];
       $.ajax({
           url: url,
           type: 'GET',
           success: function (response) {
             var jdata = $.parseJSON(response);
             var div = document.createElement("div");
+            console.log('Load 12345 : ' + JSON.stringify(jdata) );
             var data = f_editorjs_convert_json_to_html(jdata);
             var mainContainer = document.getElementById("myData");
             div.innerHTML = data;
@@ -52,17 +52,6 @@
           }
       });
     }
-    function setTitle(data) {
-      document.title = data['data']['title'];
-    }
-    async function fetchData() {
-      let parts = window.location.pathname.split( '/' );
-      let url = '/api/v1/metadata/get/' + parts[1];
-      return fetch(url)
-        .then(data => {return data.json() })
-        .then(res => { setTitle(res) })
-    }
-    fetchData()
     // );
     // function findGetParameter(parameterName) {
     //     var result = null,

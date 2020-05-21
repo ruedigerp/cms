@@ -94,6 +94,34 @@ def savemetadata():
     write_meta(id,metadata)
     return jsonify({"result":"ok"})
 
+# GET full Page list
+@app.route('/api/v1/pages', methods = ["GET"])
+def pages():
+    import os, fnmatch
+    master_dictionary = {}
+    listOfMetaFiles = os.listdir('pages/')
+    listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
+    listOfMetaFiles = sorted(listOfMetaFiles)
+    pattern = "*.json"
+    for metaentry in listOfMetaFiles:
+        if fnmatch.fnmatch(metaentry, pattern):
+            filename = metaentry.replace(".json", "")
+            print ("Filename:", filename)
+            master_dictionary[filename] = read_meta_edit(filename)
+    app.logger.info("Debug: ", master_dictionary)
+    return json.dumps(master_dictionary)
+
+# POST New Page
+@app.route("/api/v1/pages", methods=["POST"])
+def newpages():
+    callback = request.form.get('callback')
+    dateTimeObj = datetime.now()
+    id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    # write_data(id,"")
+    write_new_page(id)
+    return jsonify({"result": id})
+    # return redirect("http://"+callback+"/admin/pages.html/"+id);
+
 def p_debug(str):
     app.logger.info("Debug: ", str)
     return
@@ -102,9 +130,18 @@ def to_pretty_json(value):
     return json.dumps(value, sort_keys=false,
                       indent=4, separators=(',', ': '))
 
+def write_new_page(id):
+    page_data = {}
+    page_data = {"id": id, "type": "page", "title": id, "author": "Authorname" , "childs": ()}
+    write_page(id,page_data);
+
+def write_page(id,data):
+    with open("pages/" + id + ".json", "w") as twitter_data_file:
+        json.dump(data, twitter_data_file, indent=4, sort_keys=True)
+
 def write_new_meta(id):
     meta_data = {}
-    meta_data = {"id": id, "type": "draft", "data": { "title": id, "author": "Authorname" } }
+    meta_data = {"id": id, "type": "draft", "title": id, "author": "Authorname" }
     write_meta(id,meta_data);
 
 def read_meta_edit(id):

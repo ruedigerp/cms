@@ -37,9 +37,9 @@ async function fetchData() {
 fetchData()
 
 function setTitle(data) {
-  document.title = data['data']['title'];
-  console.log("setTitle: " + data['data']['title']);
-  $("#documentName").text(data['data']['title']);
+  document.title = data['title'];
+  console.log("setTitle: " + data['title']);
+  $("#documentName").text(data['title']);
 }
 async function fetchMeta() {
   let parts = window.location.pathname.split( '/' );
@@ -57,6 +57,7 @@ function createEditor(data){
      */
     holder: 'editorjs',
     placeholder: '... schreibe los ...',
+    autofocus: true,
     /**
      * Tools list
      */
@@ -64,6 +65,12 @@ function createEditor(data){
       /**
        * Each Tool is a Plugin. Pass them via 'class' option with necessary settings {@link docs/tools.md}
        */
+      images: SimpleImage,
+      // image: {
+      //   class: SimpleImage,
+      //   inlineToolbar: ["link"],
+      //   shortcut: 'CMD+SHIFT+J'
+      // },
       header: {
         class: Header,
         inlineToolbar: ['link'],
@@ -76,7 +83,16 @@ function createEditor(data){
       /**
        * Or pass class directly without any configuration
        */
-      image: SimpleImage,
+      // image: SimpleImage,
+      // image: {
+      //   class: ImageTool,
+      //   config: {
+      //     endpoints: {
+      //       byFile: 'http://localhost:8008/uploadFile', // Your backend file uploader endpoint
+      //       byUrl: 'http://localhost:8008/fetchUrl' // Your endpoint that provides uploading by Url
+      //     }
+      //   }
+      // },
 
       list: {
         class: List,

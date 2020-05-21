@@ -49,7 +49,7 @@ width: 30%;
       <div id="saved" style="color: #f00; visibilty: hidden ">Gespeichert</div>
       <div class="ce-example__header-menu">
         <a href="/admin/index.html" >Artikelliste</a>
-        <form id="metaform" action="/api/v1/articles" METHOD="POST">
+        <form id="metaformnew" action="/api/v1/articles" METHOD="POST">
           <script>
           document.write('<input type="hidden" name="callback" id="callback" value="' +  location.host + '" maxlength="50">');
           </script>
@@ -60,12 +60,14 @@ width: 30%;
     <div class="ce-example__content _ce-example__content--small">
     </div>
     <div class="ce-example__content _ce-example__content--small">
+      <div id="metaformd">
       <form id="metaform" action="/api/v1/metadata" METHOD="PUT">
-        <label class="h2" form="person">Metadaten ändern</label>
-        <div id="formdata"></div>
-        <button type="reset">Eingaben zurücksetzen</button>
-        <button type="button" onclick="sendForm();">Eingaben absenden</button>
+          <label class="h2" form="person">Metadaten ändern</label>
+          <div id="metaformdata"></div>
+          <button type="reset">Eingaben zurücksetzen</button>
+          <button type="button" onclick="sendForm();">Eingaben absenden</button>
       </form>
+      </div>
     </div>
     <script>
       $("#saved").delay(1).fadeOut(1);
@@ -83,7 +85,7 @@ width: 30%;
             success: function (response) {
                 $("#saved").delay(20).fadeIn(500);
                 $("#saved").delay(2000).fadeOut(500);
-                console.log("Meta Update per PUT: " + response );
+                // console.log("Meta Update per PUT: " + response );
             },
             error: function (xhr) {
                 alert('Error: There was some error while posting. Please try again later.');
@@ -98,26 +100,21 @@ width: 30%;
         var newRowContent = "";
         for ( [k,v] of Object.entries(data)) {
           console.log("k: " + k);
-          if ( k == "data" ) {
-            for ( let [dk,dv] of Object.entries(data[k])) {
-              newRowContent = '<label for="'+dk+'">'+capitalize(dk)+'</label>';
-              newRowContent += '<input type="text" name="'+dk+'" id="'+dk+'" value="'+dv+'" maxlength="50">';
-              $("#formdata").append(newRowContent);
-            }
-          } else if ( k === "id" ) {
-            newRowContent = '<label for="'+k+'">'+capitalize(k)+'</label>';
-            newRowContent += '<input disabled type="text" name="disabled'+k+'" id="'+k+'" value="'+v+'" maxlength="50">';
-            newRowContent += '<input type="hidden" name="'+k+'" id="'+k+'" value="'+v+'" maxlength="50">';
-            $("#formdata").append(newRowContent);
-          } else {
-            newRowContent = '<label for="'+k+'">'+capitalize(k)+'</label>';
-            newRowContent += '<input type="text" name="'+k+'" id="'+k+'" value="'+v+'" maxlength="50">';
-            $("#formdata").append(newRowContent);
-          }
+          // if ( k === "id" ) {
+          //   newRowContent += '<fieldset>';
+          //   // newRowContent += '<label>' + k + '</label>';
+          //   newRowContent += '<input disabled type="text" name="disabled'+k+'" id="'+k+'" value="'+v+'" maxlength="50">';
+          //   newRowContent += '<input type="hidden" name="'+k+'" id="'+k+'" value="'+v+'" maxlength="50">';
+          //   newRowContent += '<label for="'+k+'">'+capitalize(k)+'</label>';
+          //   newRowContent += '</fieldset>';
+          //   $("#metaform").prepend(newRowContent);
+          // } else {
+            newRowContent = '<div style="float: left; width: 100px;">'+capitalize(k)+': </div>';
+            newRowContent += '<div style="float: left; width: 400px;"><input type="text" name="'+k+'" id="'+k+'" value="'+v+'" maxlength="50"></div>';
+            newRowContent += '<div style="clear: both;"></div>';
+            $("#metaformdata").append(newRowContent);
+          // }
         }
-        // newRowContent = '<label for="callback">callback</label>';
-        newRowContent = '<input type="hidden" name="callback" id="callback" value="'+location.host+'" maxlength="50">';
-        $("#formdata").append(newRowContent);
       }
       async function fetchData() {
         let parts = window.location.pathname.split( '/' );

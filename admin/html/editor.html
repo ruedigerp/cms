@@ -19,9 +19,12 @@
       <div class="ce-example__header-menu">
         Dokumentenname: <span id="documentName"></span>
         <a href="/admin/index.html" >Artikelliste</a>
-        <script>
-        document.write('<a href="/api/v1/article/new/' + location.host + '">Neuer Article</a>');
-        </script>
+        <form id="metaform" action="/api/v1/articles" METHOD="POST">
+          <script>
+          document.write('<input type="hidden" name="callback" id="callback" value="' +  location.host + '" maxlength="50">');
+          </script>
+          <button type="submit">New Article</button>
+        </form>
       </div>
     </div>
     <div class="ce-example__content _ce-example__content--small">

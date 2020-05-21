@@ -15,9 +15,12 @@
     <div class="ce-example__header">
       <div class="ce-example__header-menu">
         <a href="/admin/index.html" >Artikelliste</a>
-        <script>
-        document.write('<a href="/api/v1/article/new/' + location.host + '">Neuer Article</a>');
-        </script>
+        <form id="metaform" action="/api/v1/articles" METHOD="POST">
+          <script>
+          document.write('<input type="hidden" name="callback" id="callback" value="' +  location.host + '" maxlength="50">');
+          </script>
+          <button type="submit">New Article</button>
+        </form>
       </div>
     </div>
     <div class="ce-example__content _ce-example__content--small">
@@ -71,7 +74,7 @@
         }
       }
       async function fetchData() {
-        let url = '/api/v1/article/list';
+        let url = '/api/v1/articles';
         return fetch(url)
           .then(data => {return data.json() })
           .then(res => { dataTable(res) })
@@ -79,28 +82,6 @@
 
       fetchData()
 
-      // function loadData() {
-      //   console.log("load data index.html admin Articlelist.");
-      //   // let parts = window.location.pathname.split( '/' );
-      //   let url = '/api/v1/article/list';
-      //   $.ajax({
-      //       url: url,
-      //       type: 'GET',
-      //       success: function (response) {
-      //         var jdata = $.parseJSON(response);
-      //         var div = document.createElement("div");
-      //         console.log('Load 12345 : ' + JSON.stringify(jdata) );
-      //         // var data = f_editorjs_convert_json_to_html(jdata);
-      //         return jdata;
-      //         // var mainContainer = document.getElementById("myData");
-      //         // div.innerHTML = jdata;
-      //         // mainContainer.appendChild(div);
-      //       },
-      //       error: function (xhr) {
-      //           alert('Error: There was some error while posting. Please try again later.');
-      //       }
-      //   });
-      // }
     </script>
 
   </div>

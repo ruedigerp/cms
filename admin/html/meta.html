@@ -46,26 +46,50 @@ width: 30%;
 <body>
   <div class="ce-example">
     <div class="ce-example__header">
+      <div id="saved" style="color: #f00; visibilty: hidden ">Gespeichert</div>
       <div class="ce-example__header-menu">
         <a href="/admin/index.html" >Artikelliste</a>
-        <script>
-        document.write('<a href="/api/v1/article/new/' + location.host + '">Neuer Article</a>');
-        </script>
+        <form id="metaform" action="/api/v1/articles" METHOD="POST">
+          <script>
+          document.write('<input type="hidden" name="callback" id="callback" value="' +  location.host + '" maxlength="50">');
+          </script>
+          <button type="submit">New Article</button>
+        </form>
       </div>
     </div>
     <div class="ce-example__content _ce-example__content--small">
-      <ol>
-      </ol>
     </div>
     <div class="ce-example__content _ce-example__content--small">
-      <form id="metaform" action="/api/v1/metadata/save" METHOD="POST">
+      <form id="metaform" action="/api/v1/metadata" METHOD="PUT">
         <label class="h2" form="person">Metadaten ändern</label>
         <div id="formdata"></div>
         <button type="reset">Eingaben zurücksetzen</button>
-        <button type="submit">Eingaben absenden</button>
+        <button type="button" onclick="sendForm();">Eingaben absenden</button>
       </form>
     </div>
     <script>
+      $("#saved").delay(1).fadeOut(1);
+
+      function sendForm(){
+        var frm = $("#metaform");
+        var data = JSON.stringify(frm.serializeArray());
+        console.log("Data from form: " + data);
+        let url = '/api/v1/metadata';
+        $.ajax({
+            url: url,
+            type: 'PUT',
+            contentType: 'application/json; charset=utf-8',
+            data: data,
+            success: function (response) {
+                $("#saved").delay(20).fadeIn(500);
+                $("#saved").delay(2000).fadeOut(500);
+                console.log("Meta Update per PUT: " + response );
+            },
+            error: function (xhr) {
+                alert('Error: There was some error while posting. Please try again later.');
+            }
+        });
+      }
       const capitalize = (s) => {
         if (typeof s !== 'string') return ''
         return s.charAt(0).toUpperCase() + s.slice(1)
@@ -97,7 +121,7 @@ width: 30%;
       }
       async function fetchData() {
         let parts = window.location.pathname.split( '/' );
-        let url = '/api/v1/metadata/get/' + parts[3];
+        let url = '/api/v1/metadata/' + parts[3];
         return fetch(url)
           .then(data => {return data.json() })
           .then(res => { dataTable(res) })

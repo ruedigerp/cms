@@ -31,8 +31,8 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 def apistatus():
     return jsonify({"status":"ok"})
 
-# @app.route('/editor/list', methods = ["GET"])
-@app.route('/api/v1/article/list', methods = ["GET"])
+# GET full Article list
+@app.route('/api/v1/articles', methods = ["GET"])
 def index():
     import os, fnmatch
     master_dictionary = {}
@@ -48,43 +48,51 @@ def index():
     app.logger.info("Debug: ", master_dictionary)
     return json.dumps(master_dictionary)
 
-@app.route('/api/v1/article/post/<str>', methods = ['POST'])
-def postJsonHandler(str):
-    print (request.is_json)
-    content = request.get_json()
-    print (content)
-    write_data(str,content)
-    return 'JSON posted'
-
-@app.route('/api/v1/article/get/<id>', methods = ['GET'])
+# GET Article by ID
+@app.route('/api/v1/articles/<id>', methods = ['GET'])
 def getJsonHandler(id):
     content = read_data(id)
     return json.dumps(content)
 
-@app.route("/api/v1/article/new/<callback>:<port>", methods=["GET"])
-def newarticle(callback,port):
-    referrer = request.headers.get("Referer")
+# PUT Update Artcile
+@app.route('/api/v1/articles/<id>', methods = ['PUT'])
+def postJsonHandler(id):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    write_data(id,content)
+    return jsonify({"result":"ok"})
+
+# POST New Article
+@app.route("/api/v1/articles", methods=["POST"])
+def newarticle():
+    callback = request.form.get('callback')
     dateTimeObj = datetime.now()
     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
     write_data(id,"")
     write_new_meta(id)
-    return redirect("http://"+callback+":"+port+"/admin/editor.html/"+id);
+    return redirect("http://"+callback+"/admin/editor.html/"+id);
 
-@app.route("/api/v1/metadata/get/<id>", methods=["GET"])
+# GET Metadata by ID
+@app.route("/api/v1/metadata/<id>", methods=["GET"])
 def meta_edit(id):
     content = read_meta_edit(id)
     return json.dumps(content)
 
-@app.route('/api/v1/metadata/save', methods=['POST'])
+# PUT Update Metadata
+@app.route('/api/v1/metadata', methods=['PUT'])
 def savemetadata():
-    type     = request.form.get('type')
-    id       = request.form.get('id')
-    author   = request.form.get('author')
-    title    = request.form.get('title')
-    callback = request.form.get('callback')
-    meta_data = {"id": id, "type": type, "data": { "title": title, "author": author } }
-    write_meta(id,meta_data);
-    return redirect("http://"+callback+"/admin/index.html")
+    print (request.is_json)
+    content = request.get_json()
+    metadata = {}
+    for a_dict in content:
+        if a_dict['name'] != 'callback':
+            metadata[a_dict['name']] = a_dict['value']
+        if a_dict['name'] == 'id':
+            id = a_dict['value']
+    print ("metadata: ", metadata, " ID: ", id, file=sys.stderr)
+    write_meta(id,metadata)
+    return jsonify({"result":"ok"})
 
 def p_debug(str):
     app.logger.info("Debug: ", str)

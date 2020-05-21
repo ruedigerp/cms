@@ -21,7 +21,7 @@ services:
     image: cms-admin
     build: admin
     ports:
-      - "8081:81"
+      - "8082:81"
     networks:
       - cmsnetwork
 

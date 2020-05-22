@@ -107,7 +107,7 @@ def pages():
         if fnmatch.fnmatch(metaentry, pattern):
             filename = metaentry.replace(".json", "")
             print ("Filename:", filename)
-            master_dictionary[filename] = read_meta_edit(filename)
+            master_dictionary[filename] = read_page_data(filename)
     app.logger.info("Debug: ", master_dictionary)
     return json.dumps(master_dictionary)
 
@@ -122,6 +122,26 @@ def newpages():
     return jsonify({"result": id})
     # return redirect("http://"+callback+"/admin/pages.html/"+id);
 
+# GET Page by ID
+@app.route('/api/v1/pages/<id>', methods = ['GET'])
+def getPageById(id):
+    content = read_page(id)
+    return json.dumps(content)
+
+# PUT Update Page
+@app.route('/api/v1/pages', methods=['PUT'])
+def udpatePageData():
+    print (request.is_json)
+    content = request.get_json()
+    metadata = {}
+    for a_dict in content:
+        metadata[a_dict] = content[a_dict]
+        if a_dict == 'id':
+            id = content[a_dict]
+    write_page_data(id,metadata)
+    return jsonify({"result":"ok"})
+
+
 def p_debug(str):
     app.logger.info("Debug: ", str)
     return
@@ -132,12 +152,23 @@ def to_pretty_json(value):
 
 def write_new_page(id):
     page_data = {}
-    page_data = {"id": id, "type": "page", "title": id, "author": "Authorname" , "childs": ()}
+    page_data = {"id": id, "type": "page", "title": id, "author": "Authorname" , "url": "/" + id, "childs": ()}
     write_page(id,page_data);
 
 def write_page(id,data):
-    with open("pages/" + id + ".json", "w") as twitter_data_file:
-        json.dump(data, twitter_data_file, indent=4, sort_keys=True)
+    with open("pages/" + id + ".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
+
+def read_page_data(id):
+    return json.loads(open('pages/' + id + '.json','r').read())
+
+def read_page(id):
+    return json.loads(open('pages/' + id + '.json','r').read())
+
+def write_page_data(id,data):
+    print ("id: " + id)
+    with open("pages/"+id+".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
 
 def write_new_meta(id):
     meta_data = {}
@@ -148,16 +179,16 @@ def read_meta_edit(id):
     return json.loads(open('meta/' + id + '.json','r').read())
 
 def write_meta(id,data):
-    with open("meta/" + id + ".json", "w") as twitter_data_file:
-        json.dump(data, twitter_data_file, indent=4, sort_keys=True)
+    with open("meta/" + id + ".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
 
 def read_data(id):
     return json.loads(open('data/' + id + '.json','r').read())
 
 def write_data(id,data):
     print ("id: " + id)
-    with open("data/"+id+".json", "w") as twitter_data_file:
-        json.dump(data, twitter_data_file, indent=4, sort_keys=True)
+    with open("data/"+id+".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
 
 def save_articles(articles, filepath):
     with open(filepath, "w") as f:

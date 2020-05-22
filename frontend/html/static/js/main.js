@@ -66,11 +66,6 @@ function createEditor(data){
        * Each Tool is a Plugin. Pass them via 'class' option with necessary settings {@link docs/tools.md}
        */
       images: SimpleImage,
-      // image: {
-      //   class: SimpleImage,
-      //   inlineToolbar: ["link"],
-      //   shortcut: 'CMD+SHIFT+J'
-      // },
       header: {
         class: Header,
         inlineToolbar: ['link'],

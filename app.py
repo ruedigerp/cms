@@ -133,7 +133,7 @@ def getPageById(id):
 def udpatePageData():
     content = request.get_json()
     metadata = {}
-    childs = []
+    childs = ()
     for a_dict in content:
         name = a_dict['name']
         value = a_dict['value']

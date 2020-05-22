@@ -131,13 +131,19 @@ def getPageById(id):
 # PUT Update Page
 @app.route('/api/v1/pages', methods=['PUT'])
 def udpatePageData():
-    print (request.is_json)
     content = request.get_json()
     metadata = {}
+    childs = []
     for a_dict in content:
-        metadata[a_dict] = content[a_dict]
-        if a_dict == 'id':
-            id = content[a_dict]
+        name = a_dict['name']
+        value = a_dict['value']
+        if "childs" in name:
+            childs.append(value)
+        else:
+            metadata[name] = value
+        if name == 'id':
+            id = value
+    metadata['childs'] = childs
     write_page_data(id,metadata)
     return jsonify({"result":"ok"})
 

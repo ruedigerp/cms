@@ -33,6 +33,7 @@ services:
     volumes:
       - ./data:/app/data
       - ./meta:/app/meta
+      - ./pages:/app/pages
     networks:
       - cmsnetwork
 

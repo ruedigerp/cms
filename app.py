@@ -31,8 +31,8 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 def apistatus():
     return jsonify({"status":"ok"})
 
-# @app.route('/editor/list', methods = ["GET"])
-@app.route('/api/v1/article/list', methods = ["GET"])
+# GET full Article list
+@app.route('/api/v1/articles', methods = ["GET"])
 def index():
     import os, fnmatch
     master_dictionary = {}
@@ -48,43 +48,99 @@ def index():
     app.logger.info("Debug: ", master_dictionary)
     return json.dumps(master_dictionary)
 
-@app.route('/api/v1/article/post/<str>', methods = ['POST'])
-def postJsonHandler(str):
-    print (request.is_json)
-    content = request.get_json()
-    print (content)
-    write_data(str,content)
-    return 'JSON posted'
-
-@app.route('/api/v1/article/get/<id>', methods = ['GET'])
+# GET Article by ID
+@app.route('/api/v1/articles/<id>', methods = ['GET'])
 def getJsonHandler(id):
     content = read_data(id)
     return json.dumps(content)
 
-@app.route("/api/v1/article/new/<callback>:<port>", methods=["GET"])
-def newarticle(callback,port):
-    referrer = request.headers.get("Referer")
+# PUT Update Artcile
+@app.route('/api/v1/articles/<id>', methods = ['PUT'])
+def postJsonHandler(id):
+    print (request.is_json)
+    content = request.get_json()
+    print (content)
+    write_data(id,content)
+    return jsonify({"result":"ok"})
+
+# POST New Article
+@app.route("/api/v1/articles", methods=["POST"])
+def newarticle():
+    callback = request.form.get('callback')
     dateTimeObj = datetime.now()
     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
     write_data(id,"")
     write_new_meta(id)
-    return redirect("http://"+callback+":"+port+"/admin/editor.html/"+id);
+    return redirect("http://"+callback+"/admin/editor.html/"+id);
 
-@app.route("/api/v1/metadata/get/<id>", methods=["GET"])
+# GET Metadata by ID
+@app.route("/api/v1/metadata/<id>", methods=["GET"])
 def meta_edit(id):
     content = read_meta_edit(id)
     return json.dumps(content)
 
-@app.route('/api/v1/metadata/save', methods=['POST'])
+# PUT Update Metadata
+@app.route('/api/v1/metadata', methods=['PUT'])
 def savemetadata():
-    type     = request.form.get('type')
-    id       = request.form.get('id')
-    author   = request.form.get('author')
-    title    = request.form.get('title')
+    print (request.is_json)
+    content = request.get_json()
+    metadata = {}
+    for a_dict in content:
+        if a_dict['name'] != 'callback':
+            metadata[a_dict['name']] = a_dict['value']
+        if a_dict['name'] == 'id':
+            id = a_dict['value']
+    print ("metadata: ", metadata, " ID: ", id, file=sys.stderr)
+    write_meta(id,metadata)
+    return jsonify({"result":"ok"})
+
+# GET full Page list
+@app.route('/api/v1/pages', methods = ["GET"])
+def pages():
+    import os, fnmatch
+    master_dictionary = {}
+    listOfMetaFiles = os.listdir('pages/')
+    listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
+    listOfMetaFiles = sorted(listOfMetaFiles)
+    pattern = "*.json"
+    for metaentry in listOfMetaFiles:
+        if fnmatch.fnmatch(metaentry, pattern):
+            filename = metaentry.replace(".json", "")
+            print ("Filename:", filename)
+            master_dictionary[filename] = read_page_data(filename)
+    app.logger.info("Debug: ", master_dictionary)
+    return json.dumps(master_dictionary)
+
+# POST New Page
+@app.route("/api/v1/pages", methods=["POST"])
+def newpages():
     callback = request.form.get('callback')
-    meta_data = {"id": id, "type": type, "data": { "title": title, "author": author } }
-    write_meta(id,meta_data);
-    return redirect("http://"+callback+"/admin/index.html")
+    dateTimeObj = datetime.now()
+    id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
+    # write_data(id,"")
+    write_new_page(id)
+    return jsonify({"result": id})
+    # return redirect("http://"+callback+"/admin/pages.html/"+id);
+
+# GET Page by ID
+@app.route('/api/v1/pages/<id>', methods = ['GET'])
+def getPageById(id):
+    content = read_page(id)
+    return json.dumps(content)
+
+# PUT Update Page
+@app.route('/api/v1/pages', methods=['PUT'])
+def udpatePageData():
+    print (request.is_json)
+    content = request.get_json()
+    metadata = {}
+    for a_dict in content:
+        metadata[a_dict] = content[a_dict]
+        if a_dict == 'id':
+            id = content[a_dict]
+    write_page_data(id,metadata)
+    return jsonify({"result":"ok"})
+
 
 def p_debug(str):
     app.logger.info("Debug: ", str)
@@ -94,25 +150,45 @@ def to_pretty_json(value):
     return json.dumps(value, sort_keys=false,
                       indent=4, separators=(',', ': '))
 
+def write_new_page(id):
+    page_data = {}
+    page_data = {"id": id, "type": "page", "title": id, "author": "Authorname" , "url": "/" + id, "childs": ()}
+    write_page(id,page_data);
+
+def write_page(id,data):
+    with open("pages/" + id + ".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
+
+def read_page_data(id):
+    return json.loads(open('pages/' + id + '.json','r').read())
+
+def read_page(id):
+    return json.loads(open('pages/' + id + '.json','r').read())
+
+def write_page_data(id,data):
+    print ("id: " + id)
+    with open("pages/"+id+".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
+
 def write_new_meta(id):
     meta_data = {}
-    meta_data = {"id": id, "type": "draft", "data": { "title": id, "author": "Authorname" } }
+    meta_data = {"id": id, "type": "draft", "title": id, "author": "Authorname" }
     write_meta(id,meta_data);
 
 def read_meta_edit(id):
     return json.loads(open('meta/' + id + '.json','r').read())
 
 def write_meta(id,data):
-    with open("meta/" + id + ".json", "w") as twitter_data_file:
-        json.dump(data, twitter_data_file, indent=4, sort_keys=True)
+    with open("meta/" + id + ".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
 
 def read_data(id):
     return json.loads(open('data/' + id + '.json','r').read())
 
 def write_data(id,data):
     print ("id: " + id)
-    with open("data/"+id+".json", "w") as twitter_data_file:
-        json.dump(data, twitter_data_file, indent=4, sort_keys=True)
+    with open("data/"+id+".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
 
 def save_articles(articles, filepath):
     with open(filepath, "w") as f:

@@ -76,7 +76,7 @@ width: 30%;
         var frm = $("#metaform");
         var data = JSON.stringify(frm.serializeArray());
         console.log("Data from form: " + data);
-        let url = '/api/v1/metadata';
+        let url = '/api/v1/pages';
         $.ajax({
             url: url,
             type: 'PUT',
@@ -110,7 +110,7 @@ width: 30%;
           //   $("#metaform").prepend(newRowContent);
           // } else {
             newRowContent = '<div style="float: left; width: 100px;">'+capitalize(k)+': </div>';
-            newRowContent += '<div style="float: left; width: 400px;"><input type="text" name="'+k+'" id="'+k+'" value="'+v+'" maxlength="50"></div>';
+            newRowContent += '<div style="float: left; width: 600px;"><input type="text" name="'+k+'" id="'+k+'" value="'+v+'" mxlength="50"></div>';
             newRowContent += '<div style="clear: both;"></div>';
             $("#metaformdata").append(newRowContent);
           // }
@@ -118,7 +118,7 @@ width: 30%;
       }
       async function fetchData() {
         let parts = window.location.pathname.split( '/' );
-        let url = '/api/v1/metadata/' + parts[3];
+        let url = '/api/v1/pages/' + parts[3];
         return fetch(url)
           .then(data => {return data.json() })
           .then(res => { dataTable(res) })

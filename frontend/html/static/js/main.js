@@ -27,7 +27,7 @@ $("#saved").delay(1).fadeOut(1);
 let path = location.pathname.substring(1);
 let parts = window.location.pathname.split( '/' );
 console.log("Part1: " + parts[3] );
-let url = '/api/v1/article/get/' + parts[3];
+let url = '/api/v1/articles/' + parts[3];
 async function fetchData() {
   return fetch(url)
     .then(data => {return data.json() })
@@ -37,13 +37,13 @@ async function fetchData() {
 fetchData()
 
 function setTitle(data) {
-  document.title = data['data']['title'];
-  console.log("setTitle: " + data['data']['title']);
-  $("#documentName").text(data['data']['title']);
+  document.title = data['title'];
+  console.log("setTitle: " + data['title']);
+  $("#documentName").text(data['title']);
 }
 async function fetchMeta() {
   let parts = window.location.pathname.split( '/' );
-  let url = '/api/v1/metadata/get/' + parts[3];
+  let url = '/api/v1/metadata/' + parts[3];
   return fetch(url)
     .then(data => {return data.json() })
     .then(res => { setTitle(res) })
@@ -57,6 +57,7 @@ function createEditor(data){
      */
     holder: 'editorjs',
     placeholder: '... schreibe los ...',
+    autofocus: true,
     /**
      * Tools list
      */
@@ -64,6 +65,7 @@ function createEditor(data){
       /**
        * Each Tool is a Plugin. Pass them via 'class' option with necessary settings {@link docs/tools.md}
        */
+      images: SimpleImage,
       header: {
         class: Header,
         inlineToolbar: ['link'],
@@ -76,7 +78,16 @@ function createEditor(data){
       /**
        * Or pass class directly without any configuration
        */
-      image: SimpleImage,
+      // image: SimpleImage,
+      // image: {
+      //   class: ImageTool,
+      //   config: {
+      //     endpoints: {
+      //       byFile: 'http://localhost:8008/uploadFile', // Your backend file uploader endpoint
+      //       byUrl: 'http://localhost:8008/fetchUrl' // Your endpoint that provides uploading by Url
+      //     }
+      //   }
+      // },
 
       list: {
         class: List,
@@ -147,11 +158,10 @@ function createEditor(data){
     editor.save().then((savedData) => {
       var data = JSON.stringify(savedData);
       let parts = window.location.pathname.split( '/' );
-      let url = '/api/v1/article/post/' + parts[3];
+      let url = '/api/v1/articles/' + parts[3];
       $.ajax({
-          // url: 'http://localhost:4006/postjson/' + findGetParameter("id"),
           url: url,
-          type: 'POST',
+          type: 'PUT',
           contentType: 'application/json; charset=utf-8',
           data: data,
           success: function (response) {

@@ -35,7 +35,7 @@
     function loadData() {
       console.log("load data view.html FE");
       let parts = window.location.pathname.split( '/' );
-      let url = '/api/v1/article/get/' + parts[1];
+      let url = '/api/v1/articles/' + parts[1];
       $.ajax({
           url: url,
           type: 'GET',
@@ -53,11 +53,11 @@
       });
     }
     function setTitle(data) {
-      document.title = data['data']['title'];
+      document.title = data['title'];
     }
     async function fetchData() {
       let parts = window.location.pathname.split( '/' );
-      let url = '/api/v1/metadata/get/' + parts[1];
+      let url = '/api/v1/metadata/' + parts[1];
       return fetch(url)
         .then(data => {return data.json() })
         .then(res => { setTitle(res) })

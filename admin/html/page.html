@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Metadata - CMS 🤩🧦🤨 example</title>
+  <title>Admin Page - CMS 🤩🧦🤨 example</title>
   <link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
   <link href="/static/assets/demo.css" rel="stylesheet">
   <script src="/static/assets/json-preview.js"></script>
@@ -41,6 +41,9 @@ button {
 margin-top: 1.5em;
 width: 30%;
 }
+.up-button, .down-button, .delete-button {
+  width: 50px;
+}
 </style>
 </head>
 <body>
@@ -62,8 +65,10 @@ width: 30%;
     <div class="ce-example__content _ce-example__content--small">
       <div id="metaformd">
       <form id="metaform" action="/api/v1/metadata" METHOD="PUT">
-          <label class="h2" form="person">Metadaten ändern</label>
+          <label class="h2" form="person">Seite ändern</label>
           <div id="metaformdata"></div>
+          <div id="childlist"></div>
+          <div id="addChildButton"></div>
           <button type="reset">Eingaben zurücksetzen</button>
           <button type="button" onclick="sendForm();">Eingaben absenden</button>
       </form>
@@ -71,7 +76,6 @@ width: 30%;
     </div>
     <script>
       $("#saved").delay(1).fadeOut(1);
-
       function sendForm(){
         var frm = $("#metaform");
         var data = JSON.stringify(frm.serializeArray());
@@ -85,7 +89,6 @@ width: 30%;
             success: function (response) {
                 $("#saved").delay(20).fadeIn(500);
                 $("#saved").delay(2000).fadeOut(500);
-                // console.log("Meta Update per PUT: " + response );
             },
             error: function (xhr) {
                 alert('Error: There was some error while posting. Please try again later.');
@@ -96,25 +99,67 @@ width: 30%;
         if (typeof s !== 'string') return ''
         return s.charAt(0).toUpperCase() + s.slice(1)
       }
+      function addChild(childcounter) {
+        newRowContent = '<div class="leg">';
+        newRowContent += '<div style="float: left; width: 100px;">Child: </div>';
+        newRowContent += '<div style="float: left; width: 600px;"><input type="text" name="childs" id="'+k+'" value="" mxlength="50">';
+        newRowContent += '<input type="button" value="Up" class="up-button"/>';
+        newRowContent += '<input type="button" value="Down" class="down-button"/>';
+        newRowContent += '<input type="button" value="Delete" class="delete-button"/>';
+        newRowContent += '</div>';
+        newRowContent += '<div style="clear: both;"></div></div>';
+        $("#childlist").append(newRowContent);
+        childcounter++;
+        $('.up-button').click(function(){
+          $(this).parents('.leg').insertBefore($(this).parents('.leg').prev());
+        });
+        $('.down-button').click(function(){
+          $(this).parents('.leg').insertAfter($(this).parents('.leg').next());
+        });
+        $('.delete-button').click(function(){
+          $(this).parents('.leg').remove();
+        });
+        return childcounter;
+      }
       function dataTable(data) {
         var newRowContent = "";
+        var childcounter = 0;
         for ( [k,v] of Object.entries(data)) {
-          console.log("k: " + k);
-          // if ( k === "id" ) {
-          //   newRowContent += '<fieldset>';
-          //   // newRowContent += '<label>' + k + '</label>';
-          //   newRowContent += '<input disabled type="text" name="disabled'+k+'" id="'+k+'" value="'+v+'" maxlength="50">';
-          //   newRowContent += '<input type="hidden" name="'+k+'" id="'+k+'" value="'+v+'" maxlength="50">';
-          //   newRowContent += '<label for="'+k+'">'+capitalize(k)+'</label>';
-          //   newRowContent += '</fieldset>';
-          //   $("#metaform").prepend(newRowContent);
-          // } else {
+          if ( k.includes("childs") ) {
+            console.log("Is Child field.");
+            for ( child in v ) {
+              console.log("Child: " + child + " " + v[child]);
+              newRowContent = '<div class="leg">';
+              newRowContent += '<div style="float: left; width: 100px;">'+capitalize(k)+childcounter+': </div>';
+              newRowContent += '<div style="float: left; width: 600px;"><input type="text" name="'+k+'" id="'+k+'" value="'+v[child]+'" mxlength="50">';
+              newRowContent += '<input type="button" value="Up" class="up-button"/>';
+              newRowContent += '<input type="button" value="Down" class="down-button"/>';
+              newRowContent += '<input type="button" value="Delete" class="delete-button"/>';
+              newRowContent += '</div></div>';
+              newRowContent += '<div style="clear: both;"></div>';
+              $("#childlist").append(newRowContent);
+              childcounter++;
+            }
+            newRowContent = '<div id="addchild" style="float: left; width: 100px;">Child: </div>';
+            newRowContent += '<div style="float: left; width: 600px;"><input type="button" onclick="childcounter = addChild('+childcounter+');" name="addchild" id="addchild" value="hinzufügen" maxlength="50"></div>';
+            newRowContent += '<div style="clear: both;"></div>';
+            $("#addChildButton").append(newRowContent);
+          } else {
             newRowContent = '<div style="float: left; width: 100px;">'+capitalize(k)+': </div>';
             newRowContent += '<div style="float: left; width: 600px;"><input type="text" name="'+k+'" id="'+k+'" value="'+v+'" mxlength="50"></div>';
             newRowContent += '<div style="clear: both;"></div>';
             $("#metaformdata").append(newRowContent);
-          // }
+          }
         }
+        $('.up-button').click(function(){
+          $(this).parents('.leg').insertBefore($(this).parents('.leg').prev());
+        });
+        $('.down-button').click(function(){
+          $(this).parents('.leg').insertAfter($(this).parents('.leg').next());
+        });
+        $('.delete-button').click(function(){
+          $(this).parents('.leg').remove();
+        });
       }
       async function fetchData() {
         let parts = window.location.pathname.split( '/' );

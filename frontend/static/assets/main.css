@@ -142,9 +142,16 @@ a {
     left: 0;
 }
 
+pre {
+  margin: 10px;
+  padding: 10px;
+}
+
 .inline-code {
   font-style: italic;
   font-size: 16px;
-  color: lightgreen;
-  background-color: black
+  /* color: lightgreen; */
+  color: white;
+  background-color: black;
+  width: 100%;
 }

@@ -32,23 +32,6 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 def apistatus():
     return jsonify({"status":"ok"})
 
-# GET Page by ID
-@app.route('/page/<id>', methods = ['GET'])
-def getPageById(id):
-    children = ""
-    content = ""
-    data = []
-    page = read_page(id)
-    pagetitle = page['title']
-    pageauthor = page['author']
-    pageid = page['id']
-    for key in page['childs']:
-        children = children + " " + key
-        article = read_article(key)
-        data.append(article)
-    return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
-        pageauthor=pageauthor, pageid=pageid )
-
 # Rewrite / to /home
 @app.route('/', methods = ["GET"] )
 def redirectToHome():
@@ -75,23 +58,31 @@ def catch_all(u_path):
     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
         pageauthor=pageauthor, pageid=pageid )
 
-### Old Stuff: test disable, if no errors, delete
-# GET full Article list
-@app.route('/api/v1/articles', methods = ["GET"])
-def index():
-    master_dictionary = {}
-    listOfMetaFiles = os.listdir('meta/')
-    listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
-    listOfMetaFiles = sorted(listOfMetaFiles)
-    pattern = "*.json"
-    for metaentry in listOfMetaFiles:
-        if fnmatch.fnmatch(metaentry, pattern):
-            filename = metaentry.replace(".json", "")
-            print ("Filename:", filename)
-            master_dictionary[filename] = read_meta_edit(filename)
-    app.logger.info("Debug: ", master_dictionary)
-    return json.dumps(master_dictionary)
-### END Old Stuff
+# GET Page by ID
+@app.route('/page/<id>', methods = ['GET'])
+def getPageById(id):
+    children = ""
+    content = ""
+    data = []
+    page = read_page(id)
+    pagetitle = page['title']
+    pageauthor = page['author']
+    pageid = page['id']
+    for key in page['childs']:
+        children = children + " " + key
+        article = read_article(key)
+        data.append(article)
+    return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
+        pageauthor=pageauthor, pageid=pageid )
+
+####
+# route for content direkt view
+# @app.route('/content/<id>', methods = ['GET'])
+# def getPageById(id):
+#     ...
+#     return Stuff
+#
+####
 
 def pageIdByName(name):
     url = 'http://cms-api:4006/api/v1/rewrite/' + name
@@ -114,6 +105,28 @@ def read_article(id):
 def to_pretty_json(value):
     return json.dumps(value, sort_keys=false,
                       indent=4, separators=(',', ': '))
+
+
+##################################################
+#
+#  Old Stuff: test disable, if no errors, delete
+#
+
+# GET full Article list
+@app.route('/api/v1/articles', methods = ["GET"])
+def index():
+    master_dictionary = {}
+    listOfMetaFiles = os.listdir('meta/')
+    listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
+    listOfMetaFiles = sorted(listOfMetaFiles)
+    pattern = "*.json"
+    for metaentry in listOfMetaFiles:
+        if fnmatch.fnmatch(metaentry, pattern):
+            filename = metaentry.replace(".json", "")
+            print ("Filename:", filename)
+            master_dictionary[filename] = read_meta_edit(filename)
+    app.logger.info("Debug: ", master_dictionary)
+    return json.dumps(master_dictionary)
 
 def write_new_page(id):
     page_data = {}
@@ -156,6 +169,10 @@ def save_articles(articles, filepath):
     with open(filepath, "w") as f:
         json.dump(articles, f, indent=4)
     return None
+#
+# END Old Stuff
+#
+##################################################
 
 app.jinja_env.filters['tojson_pretty'] = to_pretty_json
 

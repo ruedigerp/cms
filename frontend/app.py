@@ -14,6 +14,7 @@ import requests
 import time
 import re
 import natsort
+from dotenv import load_dotenv
 # import os, fnmatch
 ## import html
 from datetime import datetime
@@ -28,6 +29,10 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "OCML3BRawWEUeaxcuKHLpw"
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
+load_dotenv()
+domain = os.environ.get("DOMAIN")
+print ("DOMAIN: ", domain, file=sys.stderr)
+
 @app.route('/status', methods=["GET"])
 def apistatus():
     return jsonify({"status":"ok"})
@@ -35,7 +40,7 @@ def apistatus():
 # Rewrite / to /home
 @app.route('/', methods = ["GET"] )
 def redirectToHome():
-    return redirect('https://cms.9it.eu/home')
+    return redirect(DOMAIN , '/home')
 
 # GET Page by Name
 @app.route('/<path:u_path>')

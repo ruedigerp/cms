@@ -10,43 +10,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/json2html/1.4.0/json2html.min.js"></script>
   <link href="/static/assets/main.css" rel="stylesheet">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <style>
-    form {
-    width: 40em;
-    }
-
-    label.h2 {
-    font-weight: bold;
-    font-size: 150%;
-    width: 100%;
-    margin-bottom: 1em;
-    }
-
-    input, label {
-    float: left;
-    width: 40%;
-    }
-    input {
-    margin: 0 0 1em .2em;
-    padding: .2em .5em;
-    background-color: #fffbf0;
-    border: 1px solid #e7c157;
-    }
-    label.input {
-    text-align: right;
-    line-height: 1.5;
-    }
-    label.input::after {
-    content: ": ";
-    }
-    button {
-    margin-top: 1.5em;
-    width: 30%;
-    }
-    .up-button, .down-button, .delete-button {
-      width: 50px;
-    }
-  </style>
 </head>
 <body>
   <div class="grid-container">
@@ -73,7 +36,6 @@
                 <td style="width:150px;">URL</td>
                 <td style="width:100px;">Edit</td>
                 <td style="width:100px;">Preview</td>
-                <!-- <td style="width:100px;">Metadaten</td> -->
               </tr>
             </thead>
             <tbody>
@@ -88,7 +50,6 @@
     </div>
   </div>
 
-  </div>
   <script>
     function dataTable(data) {
       let counter = 0;
@@ -102,7 +63,6 @@
         }
         newRowContent += "<td><a href='/admin/page.html/" + data[key]['id'] + "'>Edit</a></td>";
         newRowContent += "<td><a href='/admin/view.html/" + data[key]['id'] + "'>Preview</a></td>";
-        // newRowContent += "<td><a href='/admin/meta.html/" + data[key]['id'] + "'>Metadaten</a></td>";
         newRowContent += "</tr>";
         $("#myTableData tbody").append(newRowContent);
       }

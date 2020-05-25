@@ -8,7 +8,7 @@ from flask_cors import CORS
 # from libs.SrvTree import *
 import sys
 import json
-import os
+import os,fnmatch
 import logging
 import requests
 import time
@@ -117,10 +117,8 @@ def newpages():
     callback = request.form.get('callback')
     dateTimeObj = datetime.now()
     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
-    # write_data(id,"")
     write_new_page(id)
     return jsonify({"result": id})
-    # return redirect("http://"+callback+"/admin/pages.html/"+id);
 
 # GET Page by ID
 @app.route('/api/v1/pages/<id>', methods = ['GET'])
@@ -132,21 +130,51 @@ def getPageById(id):
 @app.route('/api/v1/pages', methods=['PUT'])
 def udpatePageData():
     content = request.get_json()
+    print ("content: ", content, file=sys.stderr)
     metadata = {}
     childs = []
     for a_dict in content:
         name = a_dict['name']
         value = a_dict['value']
         if "childs" in name:
+            print ("Name: ", name, " Value: ", value, file=sys.stderr)
             childs.append(value)
         else:
+            print ("Name: ", name, " Value: ", value, file=sys.stderr)
             metadata[name] = value
         if name == 'id':
             id = value
     metadata['childs'] = childs
+    print ("MetaData: ", metadata, file=sys.stderr)
     write_page_data(id,metadata)
+    # return json.dumps(metadata)
     return jsonify({"result":"ok"})
 
+# GET Page by Name
+@app.route('/api/v1/rewrite/<path:u_path>')
+def rewrite(u_path):
+    name = u_path
+    print ("name: ", name, file=sys.stderr)
+    id = pageIdByName(name)
+    return jsonify({"id": id})
+
+def pageIdByName(name):
+    master_dictionary = {}
+    listOfMetaFiles = os.listdir('pages/')
+    listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
+    listOfMetaFiles = sorted(listOfMetaFiles)
+    pattern = "*.json"
+    for metaentry in listOfMetaFiles:
+        if fnmatch.fnmatch(metaentry, pattern):
+            filename = metaentry.replace(".json", "")
+            print ("Filename:", filename, file=sys.stderr)
+            metaData = read_page_data(filename)
+            print ("MetaData: ", json.dumps(metaData), file=sys.stderr)
+            if name in metaData['url']:
+                app.logger.info("Debug: ", name)
+                return metaData['id']
+    app.logger.info("Debug: ", master_dictionary)
+    return name
 
 def p_debug(str):
     app.logger.info("Debug: ", str)

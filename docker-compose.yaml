@@ -1,7 +1,7 @@
 version: "3"
 services:
 
-  cms-web:
+  cms-lb:
     image: cms-web
     build: webserver
     ports:
@@ -13,7 +13,7 @@ services:
     image: cms-fe
     build: frontend
     ports:
-      - "8080:80"
+      - "8080:8080"
     networks:
       - cmsnetwork
 
@@ -21,7 +21,7 @@ services:
     image: cms-admin
     build: admin
     ports:
-      - "8082:81"
+      - "8082:8081"
     networks:
       - cmsnetwork
 

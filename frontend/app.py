@@ -35,7 +35,11 @@ def apistatus():
 # Rewrite / to /home
 @app.route('/', methods = ["GET"] )
 def redirectToHome():
+<<<<<<< HEAD
     return redirect('https://www.9it.eu/home')
+=======
+    return redirect('http://localhost:8888/home')
+>>>>>>> 0eb8b990edc207a62269459640ab62c6ccacc91f
 
 # GET Page by Name
 @app.route('/<path:u_path>')

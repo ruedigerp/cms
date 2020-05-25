@@ -46,6 +46,10 @@ def pagesList():
 def pageEditor(id):
     return render_template("page.html", id=id)
 
+@app.route('/admin/menu.html', methods = ["GET"] )
+def menuEditor():
+    return render_template("menu.html", id="1")
+
 @app.route('/admin/meta.html/<id>', methods = ["GET"] )
 def metaEditor(id):
     return render_template("meta.html", id=id)

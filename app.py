@@ -176,6 +176,44 @@ def pageIdByName(name):
     app.logger.info("Debug: ", master_dictionary)
     return name
 
+# GET Article by ID
+@app.route('/api/v1/menu/<id>', methods = ['GET'])
+def getMenu(id):
+    content = read_menu(id)
+    return json.dumps(content)
+
+# PUT Update Artcile
+@app.route('/api/v1/menu/<id>', methods = ['PUT'])
+def editMenu(id):
+    print (request.is_json)
+    content = request.get_json()
+    metadata = {}
+    for a_dict in content:
+        if a_dict['name'] != 'callback':
+            metadata[a_dict['name']] = a_dict['value']
+        if a_dict['name'] == 'id':
+            id = a_dict['value']
+    print ("metadata: ", metadata, " ID: ", id, file=sys.stderr)
+    write_menu(id,metadata)
+    return jsonify({"result":"ok"})
+
+    # print (request.is_json)
+    # content = request.get_json()
+    # print (content)
+    # write_menu(id,content)
+    # return jsonify({"result":"ok"})
+
+# POST New Article
+# @app.route("/api/v1/menu", methods=["POST"])
+# def newMenu():
+#     callback = request.form.get('callback')
+#     dateTimeObj = datetime.now()
+#     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
+#     write_data(id,"")
+#     write_new_meta(id)
+#     return redirect("http://"+callback+"/admin/editor.html/"+id);
+
+
 def p_debug(str):
     app.logger.info("Debug: ", str)
     return
@@ -222,6 +260,14 @@ def read_data(id):
 def write_data(id,data):
     print ("id: " + id)
     with open("data/"+id+".json", "w") as data_file:
+        json.dump(data, data_file, indent=4, sort_keys=True)
+
+def read_menu(id):
+    return json.loads(open('meta/' + id + '.menu','r').read())
+
+def write_menu(id,data):
+    print ("id: " + id)
+    with open("meta/"+id+".menu", "w") as data_file:
         json.dump(data, data_file, indent=4, sort_keys=True)
 
 def save_articles(articles, filepath):

@@ -39,7 +39,10 @@ fetchData()
 function setTitle(data) {
   document.title = data['title'];
   console.log("setTitle: " + data['title']);
-  $("#documentName").text(data['title']);
+  $("#documentTitle").text(data['title']);
+  $("#documentId").text(data['id']);
+  $("#documentAuthor").text(data['author']);
+  $("#documentType").text(data['type']);
 }
 async function fetchMeta() {
   let parts = window.location.pathname.split( '/' );

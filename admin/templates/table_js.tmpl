@@ -1,0 +1,37 @@
+<script>
+  function dataTable(data) {
+    let counter = 0;
+    for (let [key, value] of Object.entries(data)) {
+      counter++;
+      if( counter % 2 == 0 ) { bgcol = "#eeeeee;" }
+      else { bgcol = "#cccccc;" }
+      var newRowContent = "<tr style='background-color: " + bgcol + "'>";
+      for ( [k,v] of Object.entries(data[key])) {
+        if ( k == 'id' ){
+          newRowContent += '<td class="CellWithComment">' + v.slice(0, 18) + '...';
+          newRowContent += '<span class="CellComment">'+ v + '</span></td>';
+        }
+        else if ( k == 'title' ){
+          newRowContent += '<td class="CellWithComment">' + v.slice(0, 23) + '...';
+          newRowContent += '<span class="CellComment">'+ v + '</span></td>';
+        } else {
+          newRowContent += "<td>" + v + "</td>";
+        }
+      }
+      newRowContent += "<td><a href='/admin/editor.html/" + data[key]['id'] + "'>Edit</a></td>";
+      newRowContent += "<td><a href='/admin/view.html/" + data[key]['id'] + "'>Preview</a></td>";
+      newRowContent += "<td><a href='/admin/meta.html/" + data[key]['id'] + "'>Metadata</a></td>";
+      newRowContent += "</tr>";
+      $("#myTableData tbody").append(newRowContent);
+    }
+  }
+  async function fetchData() {
+    let url = '/api/v1/articles';
+    return fetch(url)
+      .then(data => {return data.json() })
+      .then(res => { dataTable(res) })
+  }
+
+  fetchData()
+
+</script>

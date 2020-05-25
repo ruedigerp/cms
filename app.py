@@ -117,10 +117,8 @@ def newpages():
     callback = request.form.get('callback')
     dateTimeObj = datetime.now()
     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
-    # write_data(id,"")
     write_new_page(id)
     return jsonify({"result": id})
-    # return redirect("http://"+callback+"/admin/pages.html/"+id);
 
 # GET Page by ID
 @app.route('/api/v1/pages/<id>', methods = ['GET'])

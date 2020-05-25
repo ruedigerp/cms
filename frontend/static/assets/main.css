@@ -20,7 +20,6 @@
 .footer {
   grid-area: footer;
   height: 150px;
-  /* background-color: #eee; */
   background: #eee;
 }
 

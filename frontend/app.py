@@ -28,25 +28,9 @@ app = Flask(__name__)
 app.config["SECRET_KEY"] = "OCML3BRawWEUeaxcuKHLpw"
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
-@app.route('/api/v1/status', methods=["GET"])
+@app.route('/status', methods=["GET"])
 def apistatus():
     return jsonify({"status":"ok"})
-
-# GET full Article list
-@app.route('/api/v1/articles', methods = ["GET"])
-def index():
-    master_dictionary = {}
-    listOfMetaFiles = os.listdir('meta/')
-    listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
-    listOfMetaFiles = sorted(listOfMetaFiles)
-    pattern = "*.json"
-    for metaentry in listOfMetaFiles:
-        if fnmatch.fnmatch(metaentry, pattern):
-            filename = metaentry.replace(".json", "")
-            print ("Filename:", filename)
-            master_dictionary[filename] = read_meta_edit(filename)
-    app.logger.info("Debug: ", master_dictionary)
-    return json.dumps(master_dictionary)
 
 # GET Page by ID
 @app.route('/page/<id>', methods = ['GET'])
@@ -62,12 +46,10 @@ def getPageById(id):
         children = children + " " + key
         article = read_article(key)
         data.append(article)
-        # content = data["list"]
-        # children = children + "Child: " + content['childs'][str(key)] + " "
     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
         pageauthor=pageauthor, pageid=pageid )
-    # return json.dumps(content)
 
+# Rewrite / to /home
 @app.route('/', methods = ["GET"] )
 def redirectToHome():
     return redirect('/home')
@@ -75,16 +57,13 @@ def redirectToHome():
 # GET Page by Name
 @app.route('/<path:u_path>')
 def catch_all(u_path):
-    # name = u_path
     if u_path == "":
         upath = "home"
-    print ("u_path: ", u_path, file=sys.stderr)
     children = ""
     content = ""
     data = []
     reqUrl = pageIdByName(u_path)
     id = reqUrl['id']
-    print ("id: ", id, file=sys.stderr)
     page = read_page(id)
     pagetitle = page['title']
     pageauthor = page['author']
@@ -96,46 +75,29 @@ def catch_all(u_path):
     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
         pageauthor=pageauthor, pageid=pageid )
 
+### Old Stuff: test disable, if no errors, delete
+# GET full Article list
+@app.route('/api/v1/articles', methods = ["GET"])
+def index():
+    master_dictionary = {}
+    listOfMetaFiles = os.listdir('meta/')
+    listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
+    listOfMetaFiles = sorted(listOfMetaFiles)
+    pattern = "*.json"
+    for metaentry in listOfMetaFiles:
+        if fnmatch.fnmatch(metaentry, pattern):
+            filename = metaentry.replace(".json", "")
+            print ("Filename:", filename)
+            master_dictionary[filename] = read_meta_edit(filename)
+    app.logger.info("Debug: ", master_dictionary)
+    return json.dumps(master_dictionary)
+### END Old Stuff
+
 def pageIdByName(name):
     url = 'http://cms-api:4006/api/v1/rewrite/' + name
     print ("url: ", url)
     r = requests.get(url=url)
     return r.json()
-    # master_dictionary = {}
-    # listOfMetaFiles = os.listdir('meta/')
-    # listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
-    # listOfMetaFiles = sorted(listOfMetaFiles)
-    # pattern = "*.json"
-    # for metaentry in listOfMetaFiles:
-    #     if fnmatch.fnmatch(metaentry, pattern):
-    #         filename = metaentry.replace(".json", "")
-    #         print ("Filename:", filename, file=sys.stderr)
-    #         metaData = read_meta_edit(filename)
-    #         if name in metaData['url']:
-    #             app.logger.info("Debug: ", name)
-    #             return metaData['id']
-    # app.logger.info("Debug: ", master_dictionary)
-    # return name
-
-# @app.route('/<id>', methods = ['GET'])
-# def getPageByName(id):
-#     children = ""
-#     content = ""
-#     data = []
-#     page = read_page(id)
-#     pagetitle = page['title']
-#     pageauthor = page['author']
-#     pageid = page['id']
-#     # for key in page['childs']:
-#     #     children = children + " " + key
-#     #     article = read_article(key)
-#     #     data.append(article)
-#     #     # content = data["list"]
-#     #     # children = children + "Child: " + content['childs'][str(key)] + " "
-#     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
-#         pageauthor=pageauthor, pageid=pageid )
-#     # return json.dumps(content)
-
 
 def read_page(id):
     url = 'http://cms-api:4006/api/v1/pages/' + id

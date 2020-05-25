@@ -31,7 +31,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 load_dotenv()
 domain = os.environ.get("DOMAIN")
-print ("DOMAIN: ", domain, file=sys.stderr)
+print ("domain: ", domain, file=sys.stderr)
 
 @app.route('/status', methods=["GET"])
 def apistatus():
@@ -40,7 +40,7 @@ def apistatus():
 # Rewrite / to /home
 @app.route('/', methods = ["GET"] )
 def redirectToHome():
-    return redirect(DOMAIN , '/home')
+    return redirect(domain , '/home')
 
 # GET Page by Name
 @app.route('/<path:u_path>')

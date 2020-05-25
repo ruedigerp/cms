@@ -4,3 +4,4 @@ meta/
 bin/
 include/
 lib/
+.env

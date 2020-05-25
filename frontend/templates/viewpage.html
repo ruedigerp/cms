@@ -34,20 +34,22 @@
       </div>
     </div>
     <div class="content">
-      <div>
-        {% for key in content %}
-          {% for k in key['blocks'] %}
-            {% if k['type'] == 'paragraph' %}
-              <p>{{ k['data']['text'] | safe }}</p>
-            {% elif k['type'] == 'header' %}
-              <H{{ k['data']['level']}}>{{ k['data']['text'] | safe }}</H{{ k['data']['level']}}>
-            {% elif k['type'] == 'delimiter' %}
-              <div class="ce-delimiter cdx-block"></div>
-            {% elif k['type'] == 'code' %}
-              <pre><code>{{k['data']['code']}}</code></pre>
-            {% endif %}
+      <div class="ce-example__content _ce-example__content--small">
+        <div id="editorjs">
+          {% for key in content %}
+            {% for k in key['blocks'] %}
+              {% if k['type'] == 'paragraph' %}
+                <p>{{ k['data']['text'] | safe }}</p>
+              {% elif k['type'] == 'header' %}
+                <H{{ k['data']['level']}}>{{ k['data']['text'] | safe }}</H{{ k['data']['level']}}>
+              {% elif k['type'] == 'delimiter' %}
+                <div class="ce-delimiter cdx-block"></div>
+              {% elif k['type'] == 'code' %}
+                <pre class="inline-code"><code class="inline-code">{{k['data']['code']}}</code></pre>
+              {% endif %}
+            {% endfor %}
           {% endfor %}
-        {% endfor %}
+        </div>
       </div>
     </div>
     <div class="aside">

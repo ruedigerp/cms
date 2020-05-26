@@ -192,12 +192,16 @@ def editMenu(id):
 
 @app.route('/api/v1/daily', methods = ['GET'])
 def daily():
-    list = ["Bene", "Tim", "Martin", "Rüdiger"]
-    sampling = random.choices(list, k=4)
-    return html(sampling)
+    list = [0,1,2,3]
+    kollegas = ["Bene", "Tim", "Martin", "Rüdiger"]
+    output = ""
+    random.shuffle(list)
+    for key in list:
+        output = output + kollegas[key] + " "
+    return html(output)
 
-def html(content):  # Also allows you to set your own <head></head> etc
-   return '<html><head>Daily</head><body>Die Würfel sind gefallen: ' +  str(content) + '</body></html>'
+def html(content):
+   return 'Die Würfel sind gefallen: ' +  str(content) + ''
 
 
 # POST New Menu

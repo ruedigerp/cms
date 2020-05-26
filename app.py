@@ -17,6 +17,7 @@ import re
 import natsort
 ## import html
 from datetime import datetime
+from dotenv import load_dotenv
 ## from flasgger import Swagger
 from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
@@ -27,6 +28,11 @@ from bs4 import BeautifulSoup
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "OCML3BRawWEUeaxcuKHLpw"
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+load_dotenv()
+domain = os.environ.get("DOMAIN")
+apiport = os.environ.get("APIPORT")
+slackhook = os.environ.get("SLACKHOOK")
 
 @app.route('/api/v1/status', methods=["GET"])
 def apistatus():
@@ -202,7 +208,7 @@ def daily():
 
 def html(content):
     text = "Die Würfel sind gefallen: " +  str(content)
-    r = requests.post('https://hooks.slack.com/services/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', json={"type": "mrkdwn", "text": text } )
+    r = requests.post(slackhook, json={"type": "mrkdwn", "text": text } )
     return '@channel Die Würfel sind gefallen: ' +  str(content) + ''
 
 # POST New Menu
@@ -280,4 +286,4 @@ def save_articles(articles, filepath):
 app.jinja_env.filters['tojson_pretty'] = to_pretty_json
 
 if __name__ == "__main__":
-  app.run(debug=True,host='0.0.0.0', port=4006)
+  app.run(debug=True,host='0.0.0.0', port=apiport)

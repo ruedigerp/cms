@@ -201,8 +201,7 @@ def daily():
     return html(output)
 
 def html(content):
-   return 'Die Würfel sind gefallen: ' +  str(content) + ''
-
+    return '@channel Die Würfel sind gefallen: ' +  str(content) + ''
 
 # POST New Menu
 # @app.route("/api/v1/menu", methods=["POST"])

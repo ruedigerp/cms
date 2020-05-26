@@ -190,7 +190,7 @@ def editMenu(id):
     write_menu(id,content)
     return jsonify({"result":"ok"})
 
-@app.route('/api/v1/daily', methods = ['GET'])
+@app.route('/api/v1/daily', methods = ['GET','POST'])
 def daily():
     list = [0,1,2,3]
     kollegas = ["Bene", "Tim", "Martin", "Rüdiger"]

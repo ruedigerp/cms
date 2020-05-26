@@ -1,6 +1,7 @@
 data/
 pages/
 meta/
+backups/
 bin/
 include/
 lib/

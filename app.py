@@ -11,6 +11,7 @@ import json
 import os,fnmatch
 import logging
 import requests
+import random
 import time
 import re
 import natsort
@@ -188,6 +189,16 @@ def editMenu(id):
     content = request.get_json()
     write_menu(id,content)
     return jsonify({"result":"ok"})
+
+@app.route('/api/v1/daily', methods = ['GET'])
+def daily():
+    list = ["Bene", "Tim", "Martin", "Rüdiger"]
+    sampling = random.choices(list, k=4)
+    return html(sampling)
+
+def html(content):  # Also allows you to set your own <head></head> etc
+   return '<html><head>custom head stuff here</head><body>Die Würfel sind gefallen: ' +  str(content) + '</body></html>'
+
 
 # POST New Menu
 # @app.route("/api/v1/menu", methods=["POST"])

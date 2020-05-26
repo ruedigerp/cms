@@ -155,8 +155,32 @@ function createEditor(data){
     },
     onChange: function() {
       console.log('something changed');
+      console.log("Autosave: " + autosave);
+      if ( autosave == 1 ) {
+        runAutosave();
+      }
     }
   });
+  function runAutosave() {
+    editor.save().then((savedData) => {
+      var data = JSON.stringify(savedData);
+      let parts = window.location.pathname.split( '/' );
+      let url = '/api/v1/articles/' + parts[3];
+      $.ajax({
+          url: url,
+          type: 'PUT',
+          contentType: 'application/json; charset=utf-8',
+          data: data,
+          success: function (response) {
+              $("#saved").delay(20).fadeIn(500);
+              $("#saved").delay(2000).fadeOut(500);
+          },
+          error: function (xhr) {
+              alert('Error: There was some error while posting. Please try again later.');
+          }
+      });
+    });
+  }
   saveButton.addEventListener('click', function () {
     editor.save().then((savedData) => {
       var data = JSON.stringify(savedData);

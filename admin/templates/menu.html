@@ -27,6 +27,8 @@
           <form id="metaform" action="/api/v1/menu/{{ id }}" METHOD="PUT">
               <h3>Edit Menu</h3>
               <div id="metaformdata"></div>
+              <div id="childlist"></div>
+              <div id="addChildButton"></div>
               <button type="reset">Eingaben zurücksetzen</button>
               <button type="button" onclick="sendForm();">Eingaben absenden</button>
               <span id="saved" style="color: #f00;">Gespeichert</span>
@@ -45,19 +47,20 @@
   $("#saved").delay(1).fadeOut(1);
 
   function sendForm(){
-    var frm = $("#metaform");
-    var data = JSON.stringify(frm.serializeArray());
-    console.log("Data from form: " + data);
+    var str = document.getElementById('menujson').value;
+    var jsonObj = JSON.parse(str);
+    console.log("jsonObj" + jsonObj);
+    var theDiv = document.getElementById("menujson");
+    jjsonObj = JSON.stringify(jsonObj, undefined,4 );
     let url = '/api/v1/menu/{{ id }}';
     $.ajax({
         url: url,
         type: 'PUT',
         contentType: 'application/json; charset=utf-8',
-        data: data,
+        data: jjsonObj,
         success: function (response) {
             $("#saved").delay(20).fadeIn(500);
             $("#saved").delay(2000).fadeOut(500);
-            // console.log("Meta Update per PUT: " + response );
         },
         error: function (xhr) {
             alert('Error: There was some error while posting. Please try again later.');
@@ -72,76 +75,16 @@
     var newRowContent = "";
     var childcounter = 0;
     var linkcounter = 0;
-    for ( [k,v] of Object.entries(data)) {
-      if ( k.includes("childs") ) {
-        console.log("Is Child field.");
-        for ( child in v ) {
-          console.log("Child: " + child + " " + v[child]);
-          newRowContent = '<div class="leg">';
-          newRowContent += '<div style="float: left; width: 100px;">'+capitalize(k)+childcounter+': </div>';
-          newRowContent += '<div style="float: left; width: 600px;"><input type="text" name="'+k+'" id="'+k+'" value="'+v[child]+'" mxlength="50">';
-          newRowContent += '<input type="button" value="Up" class="up-button"/>';
-          newRowContent += '<input type="button" value="Down" class="down-button"/>';
-          newRowContent += '<input type="button" value="Delete" class="delete-button"/>';
-          newRowContent += '</div></div>';
-          newRowContent += '<div style="clear: both;"></div>';
-          $("#childlist").append(newRowContent);
-          childcounter++;
-        }
-        newRowContent = '<div id="addchild" style="float: left; width: 100px;">Child: </div>';
-        newRowContent += '<div style="float: left; width: 600px;"><input type="button" onclick="childcounter = addChild('+childcounter+');" name="addchild" id="addchild" value="hinzufügen" maxlength="50"></div>';
-        newRowContent += '<div style="clear: both;"></div>';
-        $("#addChildButton").append(newRowContent);
-      } else if ( k.includes("links") ) {
-        console.log("Is link field.");
-        for ( child in v ) {
-          console.log("link: " + link + " " + v[link]);
-          newRowContent = '<div class="leg">';
-          newRowContent += '<div style="float: left; width: 100px;">'+capitalize(k)+linkcounter+': </div>';
-          newRowContent += '<div style="float: left; width: 600px;"><input type="text" name="'+k+'" id="'+k+'" value="'+v[link]+'" mxlength="50">';
-          newRowContent += '<input type="button" value="Up" class="up-button"/>';
-          newRowContent += '<input type="button" value="Down" class="down-button"/>';
-          newRowContent += '<input type="button" value="Delete" class="delete-button"/>';
-          newRowContent += '</div></div>';
-          newRowContent += '<div style="clear: both;"></div>';
-          $("#childlist").append(newRowContent);
-          linkcounter++;
-        }
-        newRowContent = '<div id="addlink" style="float: left; width: 100px;">Link: </div>';
-        newRowContent += '<div style="float: left; width: 600px;"><input type="button" onclick="linkcounter = addChild('+linkcounter+');" name="addchild" id="addchild" value="hinzufügen" maxlength="50"></div>';
-        newRowContent += '<div style="clear: both;"></div>';
-        $("#addChildButton").append(newRowContent);
-      } else {
-        newRowContent = '<div style="float: left; width: 100px;">'+capitalize(k)+': </div>';
-        newRowContent += '<div style="float: left; width: 600px;"><input type="text" name="'+k+'" id="'+k+'" value="'+v+'" mxlength="50"></div>';
-        newRowContent += '<div style="clear: both;"></div>';
-        $("#metaformdata").append(newRowContent);
-      }
-    }
-    $('.up-button').click(function(){
-      $(this).parents('.leg').insertBefore($(this).parents('.leg').prev());
-    });
-    $('.down-button').click(function(){
-      $(this).parents('.leg').insertAfter($(this).parents('.leg').next());
-    });
-    $('.delete-button').click(function(){
-      $(this).parents('.leg').remove();
-    });
+    console.log("Data: " + data);
+    newRowContent = '<div class="leg">';
+    newRowContent += '<div style="float: left; width: 600px;">';
+    newRowContent += '<textarea rows="25" cols="60" id="menujson">' + JSON.stringify(data, undefined, 4) + '</textarea>';
+    newRowContent += '</div></div>';
+    $("#childlist").append(newRowContent);
   }
-  // function dataTable(data) {
-  //   var newRowContent = "";
-  //   for ( [k,v] of Object.entries(data)) {
-  //     console.log("k: " + k);
-  //       newRowContent = '<div style="float: left; width: 100px;">'+k+': </div>';
-  //       newRowContent += '<div style="float: left; width: 400px;"><input type="text" name="menu" id="'+k+'" value="'+v+'"></div>';
-  //       newRowContent += '<div style="clear: both;"></div>';
-  //       $("#metaformdata").append(newRowContent);
-  //     // }
-  //   }
-  // }
+
   async function fetchData() {
-    let parts = window.location.pathname.split( '/' );
-    let url = '/api/v1/menu/{{ id }}'; // + parts[3];
+    let url = '/api/v1/menu/{{ id }}';
     return fetch(url)
       .then(data => {return data.json() })
       .then(res => { dataTable(res) })

@@ -20,11 +20,11 @@
         <h1>CMS</h1>
         <h3>ContentNinja</h3>
         <div class="et-hero-tabs-container">
-          <a class="et-hero-tab" href="/home">Home</a>
-          <a class="et-hero-tab" href="/testeditor">Testeditor</a>
-          <a class="et-hero-tab" href="/docs">Docs</a>
-          <a class="et-hero-tab" href="/downloads">Downloads</a>
-          <a class="et-hero-tab" href="#tab-other">Impress</a>
+          {% for item in menu %}
+            {% for key in item %}
+              <a class="et-hero-tab" href="{{ item[key] }}">{{ key }}</a>
+            {% endfor %}
+          {% endfor %}
           <span class="et-hero-tab-slider"></span>
         </div>
       </section>

@@ -68,7 +68,7 @@
       }
     }
     async function fetchData() {
-      let url = '/api/v1/pages';
+      let url = '{{ apiurl }}/api/v1/pages';
       return fetch(url)
         .then(data => {return data.json() })
         .then(res => { dataTable(res) })

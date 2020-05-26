@@ -31,6 +31,8 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 load_dotenv()
 domain = os.environ.get("DOMAIN")
+api_int = os.environ.get("API_INT")
+
 
 @app.route('/status', methods=["GET"])
 def apistatus():
@@ -62,7 +64,7 @@ def catch_all(u_path):
         article = read_article(key)
         data.append(article)
     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
-        pageauthor=pageauthor, pageid=pageid, menu=menu["menu"] )
+        pageauthor=pageauthor, pageid=pageid, menu=menu["menu"], apiurl=api_int )
 
 # GET Page by ID
 @app.route('/page/<id>', methods = ['GET'])
@@ -80,7 +82,7 @@ def getPageById(id):
         article = read_article(key)
         data.append(article)
     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
-        pageauthor=pageauthor, pageid=pageid, menu=menu["menu"] )
+        pageauthor=pageauthor, pageid=pageid, menu=menu["menu"], apiurl=api_int )
 
 ####
 # route for content direkt view
@@ -92,24 +94,24 @@ def getPageById(id):
 ####
 
 def getMenu():
-    url = 'http://cms-api:4006/api/v1/menu/1'
+    url = api_int + '/api/v1/menu/1'
     r = requests.get(url=url)
     return r.json()
 
 def pageIdByName(name):
-    url = 'http://cms-api:4006/api/v1/rewrite/' + name
+    url = api_int + '/api/v1/rewrite/' + name
     print ("url: ", url)
     r = requests.get(url=url)
     return r.json()
 
 def read_page(id):
-    url = 'http://cms-api:4006/api/v1/pages/' + id
+    url = api_int + '/api/v1/pages/' + id
     print ("url: " + url)
     r = requests.get(url=url)
     return r.json()
 
 def read_article(id):
-    url = 'http://cms-api:4006/api/v1/articles/' + id
+    url = api_int + '/api/v1/articles/' + id
     print ("url: " + url)
     r = requests.get(url=url)
     return r.json()

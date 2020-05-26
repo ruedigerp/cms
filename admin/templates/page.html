@@ -25,7 +25,7 @@
       <div class="ce-example__content _ce-example__content--small">
         <h3>Edit Page</h3>
         <div id="metaformd">
-        <form id="metaform" action="/api/v1/metadata" METHOD="PUT">
+        <form id="metaform" action="{{ apiurl }}/api/v1/metadata" METHOD="PUT">
             <div id="metaformdata"></div>
             <div id="childlist"></div>
             <div id="addChildButton"></div>
@@ -49,7 +49,7 @@
       var frm = $("#metaform");
       var data = JSON.stringify(frm.serializeArray());
       console.log("Data from form: " + data);
-      let url = '/api/v1/pages';
+      let url = '{{ apiurl }}/api/v1/pages';
       $.ajax({
           url: url,
           type: 'PUT',
@@ -132,7 +132,7 @@
     }
     async function fetchData() {
       let parts = window.location.pathname.split( '/' );
-      let url = '/api/v1/pages/' + parts[3];
+      let url = '{{ apiurl }}/api/v1/pages/' + parts[3];
       return fetch(url)
         .then(data => {return data.json() })
         .then(res => { dataTable(res) })

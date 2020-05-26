@@ -15,6 +15,7 @@ import random
 import time
 import re
 import natsort
+import shutil
 ## import html
 from datetime import datetime
 from dotenv import load_dotenv
@@ -31,7 +32,7 @@ cors = CORS(app, resources={r"/*": {"origins": "*"}})
 
 load_dotenv()
 domain = os.environ.get("DOMAIN")
-apiport = os.environ.get("APIPORT")
+apiport = os.environ.get("API_PORT")
 slackhook = os.environ.get("SLACKHOOK")
 
 @app.route('/api/v1/status', methods=["GET"])
@@ -78,7 +79,8 @@ def newarticle():
     id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S-%f")
     write_data(id,"")
     write_new_meta(id)
-    return redirect("http://"+callback+"/admin/editor.html/"+id);
+    # return redirect("http://"+callback+"/admin/editor.html/"+id);
+    return redirect(domain + "/admin/editor.html/"+id);
 
 # GET Metadata by ID
 @app.route("/api/v1/metadata/<id>", methods=["GET"])
@@ -195,6 +197,22 @@ def editMenu(id):
     content = request.get_json()
     write_menu(id,content)
     return jsonify({"result":"ok"})
+
+@app.route('/api/v1/zip/<dir>', methods = ["GET"])
+def zipData(dir):
+    dateTimeObj = datetime.now()
+    id = dateTimeObj.strftime("%Y-%m-%d-%H-%M-%S")
+    output_filename = "/app/backups/" + dir + "-" + id
+    shutil.make_archive(output_filename, 'zip', "/app/" + dir)
+    return redirect(domain + "/admin/import_export.html")
+
+@app.route('/api/v1/zip', methods = ["GET"])
+def listBackups():
+    master_dictionary = {}
+    listOfMetaFiles = os.listdir('backups/')
+    listOfMetaFiles = natsort.natsorted(listOfMetaFiles,reverse=True)
+    listOfMetaFiles = sorted(listOfMetaFiles)
+    return jsonify(listOfMetaFiles)
 
 @app.route('/api/v1/daily', methods = ['GET','POST'])
 def daily():

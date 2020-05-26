@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Admin Metaedit - CMS 🤩🧦🤨 example</title>
+  <title>Admin Backup/Restore - CMS 🤩🧦🤨 example</title>
   <link href="https://fonts.googleapis.com/css?family=PT+Mono" rel="stylesheet">
   <link href="/static/assets/demo.css" rel="stylesheet">
   <script src="/static/assets/json-preview.js"></script>
@@ -23,15 +23,31 @@
 
     <div class="content">
       <div class="ce-example__content _ce-example__content--small">
-        <div id="metaformd">
-          <form id="metaform" action="{{ apiurl }}/api/v1/metadata" METHOD="PUT">
-              <h3>Metadaten ändern</h3>
-              <div id="metaformdata"></div>
-              <button type="reset">Eingaben zurücksetzen</button>
-              <button type="button" onclick="sendForm();">Eingaben absenden</button>
-              <span id="saved" style="color: #f00;">Gespeichert</span>
-          </form>
-        </div>
+        <h3>Backup and Restore from/to external API</h3>
+        <h4>Menü</h4>
+        <div>Export from: {{ localapi }} to: {{ remoteapi }}</div>
+        <div>Import from: {{ remoteapi }} to: {{ localapi }}</div>
+        <h4>Content</h4>
+        <div>Export from: {{ localapi }} to: {{ remoteapi }}</div>
+        <div>Import from: {{ remoteapi }} to: {{ localapi }}</div>
+        <h4>Pages</h4>
+        <div>Export from: {{ localapi }} to: {{ remoteapi }}</div>
+        <div>Import from: {{ remoteapi }} to: {{ localapi }}</div>
+        <h4>Meta</h4>
+        <div>Export from: {{ localapi }} to: {{ remoteapi }}</div>
+        <div>Import from: {{ remoteapi }} to: {{ localapi }}</div>
+        <hr>
+        <h4>Create Backups</h4>
+        Zip: <a href="{{ publicapi }}/api/v1/zip/data">Content</a> <br>
+        Zip: <a href="{{ publicapi }}/api/v1/zip/pages">Pages</a> <br>
+        Zip: <a href="{{ publicapi }}/api/v1/zip/meta">Meta</a> <br>
+        <h4>List of Backups</h4>
+        <ul>
+          {% for file in backuplist %}
+            <li>{{ file }}</li>
+          {% endfor %}
+        </ul>
+        <h4>Test: {{ test }}
       </div>
     </div>
 
@@ -48,7 +64,7 @@
     var frm = $("#metaform");
     var data = JSON.stringify(frm.serializeArray());
     console.log("Data from form: " + data);
-    let url = '{{ apiurl }}/api/v1/metadata';
+    let url = '{{ publicapi }}/api/v1/metadata';
     $.ajax({
         url: url,
         type: 'PUT',
@@ -81,12 +97,12 @@
   }
   async function fetchData() {
     let parts = window.location.pathname.split( '/' );
-    let url = '{{ apiurl }}/api/v1/metadata/' + parts[3];
+    let url = '{{ publicapi }}/api/v1/metadata/' + parts[3];
     return fetch(url)
       .then(data => {return data.json() })
       .then(res => { dataTable(res) })
   }
-  fetchData()
+  // fetchData()
   </script>
 </body>
 </html>

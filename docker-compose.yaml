@@ -2,16 +2,19 @@ version: "3"
 services:
 
   cms-lb:
-    image: cms-web
-    build: webserver
+    image: cms-lb
+    build: loadbalancer
     ports:
-      - "8888:80"
+      - "${LBPORT}:80"
     networks:
       - cmsnetwork
 
   cms-fe:
     image: cms-fe
     build: frontend
+    environment:
+      - DOMAIN=${DOMAIN}
+      - API_INT=${API_INT}
     ports:
       - "8080:8080"
     networks:
@@ -20,14 +23,22 @@ services:
   cms-admin:
     image: cms-admin
     build: admin
+    environment:
+      - DOMAIN=${DOMAIN}
+      - API_INT=${API_INT}
+      - API_PUB=${API_PUB}
+      - API_EXT=${API_EXT}
     ports:
       - "8082:8081"
     networks:
       - cmsnetwork
 
   cms-api:
-    image: cms:1.0
-    build: .
+    image: cms-api
+    build: api
+    environment:
+      - SLACKHOOK=${SLACKHOOK}
+      - API_PORT=${API_PORT}
     dns:
       - 8.8.8.8
       - 9.9.9.9
@@ -37,6 +48,7 @@ services:
       - ./data:/app/data
       - ./meta:/app/meta
       - ./pages:/app/pages
+      - ./backups:/app/backups
     networks:
       - cmsnetwork
 

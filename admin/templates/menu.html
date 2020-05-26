@@ -52,7 +52,7 @@
     console.log("jsonObj" + jsonObj);
     var theDiv = document.getElementById("menujson");
     jjsonObj = JSON.stringify(jsonObj, undefined,4 );
-    let url = '/api/v1/menu/{{ id }}';
+    let url = '{{ apiurl }}/api/v1/menu/{{ id }}';
     $.ajax({
         url: url,
         type: 'PUT',
@@ -84,7 +84,7 @@
   }
 
   async function fetchData() {
-    let url = '/api/v1/menu/{{ id }}';
+    let url = '{{ apiurl }}/api/v1/menu/{{ id }}';
     return fetch(url)
       .then(data => {return data.json() })
       .then(res => { dataTable(res) })

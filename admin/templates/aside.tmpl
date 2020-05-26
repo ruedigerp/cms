@@ -1,11 +1,11 @@
       <h3>Sidebar</h3>
-      <form id="metaform" action="/api/v1/articles" METHOD="POST">
+      <form id="metaform" action="{{ apiurl }}/api/v1/articles" METHOD="POST">
         <script>
         document.write('<input type="hidden" name="callback" id="callback" value="' +  location.host + '" >');
         </script>
         <button type="submit">New Article</button>
       </form>
-      <form id="metaform" action="/api/v1/pages" METHOD="POST">
+      <form id="metaform" action="{{ apiurl }}/api/v1/pages" METHOD="POST">
         <script>
         document.write('<input type="hidden" name="callback" id="callback" value="' +  location.host + '" >');
         </script>

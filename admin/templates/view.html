@@ -34,7 +34,7 @@
     function loadData() {
       console.log("load data view.html Admin");
       let parts = window.location.pathname.split( '/' );
-      let url = '/api/v1/articles/' + parts[3];
+      let url = '{{ apiurl }}/api/v1/articles/' + parts[3];
       $.ajax({
           url: url,
           type: 'GET',

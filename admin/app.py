@@ -7,10 +7,13 @@ import sys
 import re
 from werkzeug.utils import secure_filename
 from bs4 import BeautifulSoup
+from dotenv import load_dotenv
+import shutil
+
 # import json
-# import os,fnmatch
+import os,fnmatch
 # import logging
-# import requests
+import requests
 # import time
 # import natsort
 # from datetime import datetime
@@ -18,6 +21,11 @@ from bs4 import BeautifulSoup
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "OCML3BRawWEUeaxcuKHLpw"
 cors = CORS(app, resources={r"/*": {"origins": "*"}})
+
+domain = os.environ.get("DOMAIN")
+apiurl = os.environ.get("API_INT")
+apiextern = os.environ.get("API_EXT")
+publicapi = os.environ.get("API_PUB")
 
 @app.route('/status', methods=["GET"])
 def apistatus():
@@ -43,19 +51,27 @@ def contentEditor(id):
 
 @app.route('/admin/pages.html', methods = ["GET"] )
 def pagesList():
-    return render_template("pages.html")
+    return render_template("pages.html", apiurl=publicapi)
 
 @app.route('/admin/page.html/<id>', methods = ["GET"] )
 def pageEditor(id):
-    return render_template("page.html", id=id)
+    return render_template("page.html", id=id, apiurl=publicapi)
 
 @app.route('/admin/menu.html', methods = ["GET"] )
 def menuEditor():
-    return render_template("menu.html", id="1")
+    return render_template("menu.html", id="1", apiurl=publicapi)
 
 @app.route('/admin/meta.html/<id>', methods = ["GET"] )
 def metaEditor(id):
-    return render_template("meta.html", id=id)
+    return render_template("meta.html", id=id, apiurl=publicapi)
+
+@app.route('/admin/import_export.html', methods = ["GET"] )
+def importExport():
+    url = apiurl + '/api/v1/zip'
+    r = requests.get(url=url)
+    # return r.json()
+    return render_template("import_export.html",
+        localapi=apiurl, remoteapi=apiextern, apiurl=publicapi, backuplist=r.json())
 
 if __name__ == "__main__":
   app.run(debug=True,host='0.0.0.0', port=8081)

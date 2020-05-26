@@ -197,7 +197,7 @@ def daily():
     return html(sampling)
 
 def html(content):  # Also allows you to set your own <head></head> etc
-   return '<html><head>custom head stuff here</head><body>Die Würfel sind gefallen: ' +  str(content) + '</body></html>'
+   return '<html><head>Daily</head><body>Die Würfel sind gefallen: ' +  str(content) + '</body></html>'
 
 
 # POST New Menu

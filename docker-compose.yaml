@@ -28,6 +28,9 @@ services:
   cms-api:
     image: cms:1.0
     build: .
+    dns:
+      - 8.8.8.8
+      - 9.9.9.9
     ports:
       - "4006:4006"
     volumes:

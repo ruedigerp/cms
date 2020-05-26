@@ -86,8 +86,8 @@ def savemetadata():
     content = request.get_json()
     metadata = {}
     for a_dict in content:
-        if a_dict['name'] != 'callback':
-            metadata[a_dict['name']] = a_dict['value']
+        # if a_dict['name'] != 'callback':
+        metadata[a_dict['name']] = a_dict['value']
         if a_dict['name'] == 'id':
             id = a_dict['value']
     print ("metadata: ", metadata, " ID: ", id, file=sys.stderr)

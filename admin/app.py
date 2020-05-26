@@ -34,9 +34,12 @@ def contentList():
     return render_template("index.html")
 
 # App Route Editor
+#
+# Todo: autosave="1" in env or config
+#
 @app.route('/admin/editor.html/<id>', methods = ["GET"] )
 def contentEditor(id):
-    return render_template("editor.html", id=id)
+    return render_template("editor.html", id=id, autosave="1")
 
 @app.route('/admin/pages.html', methods = ["GET"] )
 def pagesList():

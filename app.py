@@ -201,8 +201,9 @@ def daily():
     return html(output)
 
 def html(content):
-   return 'Die Würfel sind gefallen: ' +  str(content) + ''
-
+    text = "Die Würfel sind gefallen: " +  str(content)
+    r = requests.post('https://hooks.slack.com/services/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', json={"type": "mrkdwn", "text": text } )
+    return '@channel Die Würfel sind gefallen: ' +  str(content) + ''
 
 # POST New Menu
 # @app.route("/api/v1/menu", methods=["POST"])

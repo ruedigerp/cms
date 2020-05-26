@@ -56,12 +56,13 @@ def catch_all(u_path):
     pagetitle = page['title']
     pageauthor = page['author']
     pageid = id, " reqUrl: ", reqUrl
+    menu = getMenu()
     for key in page['childs']:
         children = children + " " + key
         article = read_article(key)
         data.append(article)
     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
-        pageauthor=pageauthor, pageid=pageid )
+        pageauthor=pageauthor, pageid=pageid, menu=menu["menu"] )
 
 # GET Page by ID
 @app.route('/page/<id>', methods = ['GET'])
@@ -73,12 +74,13 @@ def getPageById(id):
     pagetitle = page['title']
     pageauthor = page['author']
     pageid = page['id']
+    menu = getMenu()
     for key in page['childs']:
         children = children + " " + key
         article = read_article(key)
         data.append(article)
     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
-        pageauthor=pageauthor, pageid=pageid )
+        pageauthor=pageauthor, pageid=pageid, menu=menu["menu"] )
 
 ####
 # route for content direkt view
@@ -88,6 +90,11 @@ def getPageById(id):
 #     return Stuff
 #
 ####
+
+def getMenu():
+    url = 'http://cms-api:4006/api/v1/menu/1'
+    r = requests.get(url=url)
+    return r.json()
 
 def pageIdByName(name):
     url = 'http://cms-api:4006/api/v1/rewrite/' + name

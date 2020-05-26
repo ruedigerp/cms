@@ -176,34 +176,20 @@ def pageIdByName(name):
     app.logger.info("Debug: ", master_dictionary)
     return name
 
-# GET Article by ID
+# GET Menu by ID
 @app.route('/api/v1/menu/<id>', methods = ['GET'])
 def getMenu(id):
     content = read_menu(id)
     return json.dumps(content)
 
-# PUT Update Artcile
+# PUT Update Menu
 @app.route('/api/v1/menu/<id>', methods = ['PUT'])
 def editMenu(id):
-    print (request.is_json)
     content = request.get_json()
-    metadata = {}
-    for a_dict in content:
-        if a_dict['name'] != 'callback':
-            metadata[a_dict['name']] = a_dict['value']
-        if a_dict['name'] == 'id':
-            id = a_dict['value']
-    print ("metadata: ", metadata, " ID: ", id, file=sys.stderr)
-    write_menu(id,metadata)
+    write_menu(id,content)
     return jsonify({"result":"ok"})
 
-    # print (request.is_json)
-    # content = request.get_json()
-    # print (content)
-    # write_menu(id,content)
-    # return jsonify({"result":"ok"})
-
-# POST New Article
+# POST New Menu
 # @app.route("/api/v1/menu", methods=["POST"])
 # def newMenu():
 #     callback = request.form.get('callback')

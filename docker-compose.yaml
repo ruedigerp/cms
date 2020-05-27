@@ -4,6 +4,9 @@ services:
   cms-lb:
     image: cms-lb
     build: loadbalancer
+    dns:
+      - 8.8.8.8
+      - 9.9.9.9    
     ports:
       - "${LBPORT}:80"
     networks:
@@ -15,6 +18,9 @@ services:
     environment:
       - DOMAIN=${DOMAIN}
       - API_INT=${API_INT}
+    dns:
+      - 8.8.8.8
+      - 9.9.9.9
     ports:
       - "8080:8080"
     networks:
@@ -28,6 +34,9 @@ services:
       - API_INT=${API_INT}
       - API_PUB=${API_PUB}
       - API_EXT=${API_EXT}
+    dns:
+      - 8.8.8.8
+      - 9.9.9.9
     ports:
       - "8082:8081"
     networks:

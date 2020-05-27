@@ -61,7 +61,7 @@ def catch_all(u_path):
     menu = makeJsonRequest('/api/v1/menu/', '1')
     for key in page['childs']:
         children = children + " " + key
-        article = makeJsonRequest(key)
+        article = makeJsonRequest('/api/v1/articles/', key)
         data.append(article)
     return render_template("viewpage.html", id=id, content=data, children=children, pagetitle=pagetitle,
         pageauthor=pageauthor, pageid=pageid, menu=menu["menu"], apiurl=api_int )

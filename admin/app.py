@@ -71,7 +71,7 @@ def importExport():
     r = requests.get(url=url)
     # return r.json()
     return render_template("import_export.html",
-        localapi=apiurl, remoteapi=apiextern, apiurl=publicapi, backuplist=r.json())
+        localapi=apiurl, remoteapi=apiextern, apiurl=publicapi, domain=domain backuplist=r.json())
 
 if __name__ == "__main__":
   app.run(debug=True,host='0.0.0.0', port=8081)

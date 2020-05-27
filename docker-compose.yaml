@@ -9,6 +9,10 @@ services:
       - 9.9.9.9
     ports:
       - "${LBPORT}:80"
+    depends_on:
+      - "cms-fe"
+      - "cms-api"
+      - "cms-admin"
     networks:
       - cmsnetwork
 
@@ -46,6 +50,7 @@ services:
     image: cms-api
     build: api
     environment:
+      - DOMAIN=${DOMAIN}
       - SLACKHOOK=${SLACKHOOK}
       - API_PORT=${API_PORT}
     dns:

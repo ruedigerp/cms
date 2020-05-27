@@ -36,6 +36,10 @@
         <!-- Autor: {{ pageauthor }} <span>Content-ID: {{ pageid }}</span> -->
       </div>
     </div>
+    <div class="sidebarl">
+      <div>
+      </div>
+    </div>
     <div class="content">
       <div class="ce-example__content _ce-example__content--small">
         <div id="editorjs">
@@ -48,7 +52,17 @@
               {% elif k['type'] == 'delimiter' %}
                 <div class="ce-delimiter cdx-block"></div>
               {% elif k['type'] == 'code' %}
-                <pre class="inline-code"><code class="inline-code">{{k['data']['code']}}</code></pre>
+                <div class="codeblock"><pre>{{k['data']['code']}}<pre></div>
+              {% elif k['type'] == 'list' %}
+                <ul>
+                  {% for dat in k['data']['items'] %}
+                    <div class="cdx-checklist__item cdx-checklist__item">
+                      <div class="cdx-checklist__item-text">
+                        <li>{{ dat }}</li>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </ul>
               {% endif %}
             {% endfor %}
           {% endfor %}
@@ -60,6 +74,10 @@
         <h3>Sidebar</h3>
         <!-- <code>Content: {{ content }}</code> -->
         <iframe src="https://www.meteoblue.com/de/wetter/widget/three?geoloc=detect&nocurrent=0&noforecast=0&days=4&tempunit=CELSIUS&windunit=KILOMETER_PER_HOUR&layout=image"  frameborder="0" scrolling="NO" allowtransparency="true" sandbox="allow-same-origin allow-scripts allow-popups allow-popups-to-escape-sandbox" style="width: 300px; height: 588px"></iframe><div><!-- DO NOT REMOVE THIS LINK --><a href="https://www.meteoblue.com/de/wetter/woche/index?utm_source=weather_widget&utm_medium=linkus&utm_content=three&utm_campaign=Weather%2BWidget" target="_blank">meteoblue</a></div>
+      </div>
+    </div>
+    <div class="sidebar">
+      <div>
       </div>
     </div>
   </div>

@@ -65,9 +65,9 @@ def getJsonHandler(id):
 # PUT Update Artcile
 @app.route('/api/v1/articles/<id>', methods = ['PUT'])
 def postJsonHandler(id):
-    print (request.is_json)
+    print (request.is_json, file=sys.stderr)
     content = request.get_json()
-    print (content)
+    print (content, file=sys.stderr)
     write_data(id,content)
     return jsonify({"result":"ok"})
 

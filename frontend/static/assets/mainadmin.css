@@ -7,7 +7,7 @@
   grid-template-columns: 0.5fr 1fr 1fr 1fr 0.5fr;
   grid-template-rows: 10em 1fr 10em;
   gap: 1px 1px;
-  grid-template-areas: "header header header header header" "sidebarl content content content sidebar" "footer footer footer footer footer";
+  grid-template-areas: "header header header header header" "sidebarl content content content aside" "footer footer footer footer footer";
 }
 
 @media only screen and (max-width: 720px){
@@ -57,7 +57,7 @@
 }
 
 .aside {
-  display: none;
+  /* display: none; */
   grid-area: aside;
   font-size: 10px;
   color: gray;

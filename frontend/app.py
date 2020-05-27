@@ -52,9 +52,9 @@ def catch_all(u_path):
     children = ""
     content = ""
     data = []
-    reqUrl = makeJsonRequest(u_path)
+    reqUrl = makeJsonRequest('/api/v1/rewrite/', u_path)
     id = reqUrl['id']
-    page = makeJsonRequest('/api/v1/pages/s', id)
+    page = makeJsonRequest('/api/v1/pages/', id)
     pagetitle = page['title']
     pageauthor = page['author']
     pageid = id, " reqUrl: ", reqUrl

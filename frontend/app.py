@@ -85,7 +85,7 @@ def getPageById(id):
         pageauthor=pageauthor, pageid=pageid, menu=menu["menu"], apiurl=api_int )
 
 def makeJsonRequest(apiUri,id):
-    url = api_int + apiUri + name
+    url = api_int + apiUri + id
     r = requests.get(url=url)
     return r.json()
 

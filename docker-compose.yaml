@@ -4,6 +4,12 @@ services:
   cms-lb:
     image: cms-lb
     build: loadbalancer
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 30s
     dns:
       - 8.8.8.8
       - 9.9.9.9
@@ -19,6 +25,12 @@ services:
   cms-fe:
     image: cms-fe
     build: frontend
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 30s
     environment:
       - DOMAIN=${DOMAIN}
       - API_INT=${API_INT}
@@ -33,6 +45,12 @@ services:
   cms-admin:
     image: cms-admin
     build: admin
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 30s
     environment:
       - DOMAIN=${DOMAIN}
       - API_INT=${API_INT}
@@ -49,6 +67,12 @@ services:
   cms-api:
     image: cms-api
     build: api
+    deploy:
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 10
+        window: 30s    
     environment:
       - DOMAIN=${DOMAIN}
       - SLACKHOOK=${SLACKHOOK}
